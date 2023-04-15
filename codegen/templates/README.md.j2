@@ -4,16 +4,16 @@ Work-in-Progress
 
 ## KEM Algorithm Support
 
-| KEM Algorithm               | NIST Level    | Public Key | Secret Key | Cipher Text | Shared Secret |
-| --------------------------- | -------------:| ----------:| ----------:| -----------:| -------------:|
+| KEM Algorithm | NIST Level | Public Key | Secret Key | Cipher Text | Shared Secret |
+| ------------- | ----------:| ----------:| ----------:| -----------:| -------------:|
 {% for kem in kem_algorithms %}
-| {{ kem.meta.name }} | {{ kem.meta['claimed-nist-level'] }} | {{ kem.meta['length-public-key'] }} | {{ kem.meta['length-secret-key'] }} | {{ kem.meta['length-ciphertext'] }} | {{ kem.meta['length-shared-secret'] }} |
+| {{ kem.meta.name }} | {{ kem.meta['claimed-nist-level'] }} | {{ "{:,}".format(kem.meta['length-public-key']) }} | {{ "{:,}".format(kem.meta['length-secret-key']) }} | {{ "{:,}".format(kem.meta['length-ciphertext']) }} | {{ "{:,}".format(kem.meta['length-shared-secret']) }} |
 {% endfor %}
 
 ## Signature Algorithm Support
 
-| Signature Algorithm         | NIST Level    | Public Key | Secret Key | Signature | Seed |
-| --------------------------- | -------------:| ----------:| ----------:| ---------:| ----:|
+| Signature Algorithm | NIST Level | Public Key | Secret Key | Signature | Seed |
+| ------------------- | ----------:| ----------:| ----------:| ---------:| ----:|
 {% for sig in sign_algorithms %}
-| {{ sig.meta.name }} | {{ sig.meta['claimed-nist-level'] }} | {{ sig.meta['length-public-key'] }} | {{ sig.meta['length-secret-key'] }} | {{ sig.meta['length-signature'] }} | {{ sig.meta['length-seed'] }} |
+| {{ sig.meta.name }} | {{ sig.meta['claimed-nist-level'] }} | {{ "{:,}".format(sig.meta['length-public-key']) }} | {{ "{:,}".format(sig.meta['length-secret-key']) }} | {{ "{:,}".format(sig.meta['length-signature']) }} | {{ sig.meta['length-seed'] if sig.meta['length-seed'] else "&mdash;" }} |
 {% endfor %}

@@ -63,3 +63,10 @@ erlfmt-check: $(ERLFMT)
 
 distclean-erlfmt:
 	$(gen_verbose) rm -rf $(ERLFMT)
+
+.PHONY: gen
+
+gen:
+	$(verbose) $(CURDIR)/codegen/gen.py
+	$(verbose) $(MAKE) erlfmt
+	$(verbose) $(MAKE) -C $(CURDIR)/c_src format
