@@ -1,0 +1,480 @@
+---
+kem_algorithms:
+  - lower_c_name: hqc_rmrs_128
+    upper_c_name: HQC_RMRS_128
+    pqclean_prefix: PQCLEAN_HQCRMRS128_CLEAN
+    libname: hqc-rmrs-128_clean
+    src: crypto_kem/hqc-rmrs-128/clean
+    headers:
+      - <crypto_kem/hqc-rmrs-128/clean/api.h>
+  - lower_c_name: hqc_rmrs_192
+    upper_c_name: HQC_RMRS_192
+    pqclean_prefix: PQCLEAN_HQCRMRS192_CLEAN
+    libname: hqc-rmrs-192_clean
+    src: crypto_kem/hqc-rmrs-192/clean
+    headers:
+      - <crypto_kem/hqc-rmrs-192/clean/api.h>
+  - lower_c_name: hqc_rmrs_256
+    upper_c_name: HQC_RMRS_256
+    pqclean_prefix: PQCLEAN_HQCRMRS256_CLEAN
+    libname: hqc-rmrs-256_clean
+    src: crypto_kem/hqc-rmrs-256/clean
+    headers:
+      - <crypto_kem/hqc-rmrs-256/clean/api.h>
+  - lower_c_name: kyber512
+    upper_c_name: KYBER512
+    pqclean_prefix: PQCLEAN_KYBER512_CLEAN
+    libname: kyber512_clean
+    src: crypto_kem/kyber512/clean
+    headers:
+      - <crypto_kem/kyber512/clean/api.h>
+  - lower_c_name: kyber512_90s
+    upper_c_name: KYBER512_90S
+    pqclean_prefix: PQCLEAN_KYBER51290S_CLEAN
+    libname: kyber512-90s_clean
+    src: crypto_kem/kyber512-90s/clean
+    headers:
+      - <crypto_kem/kyber512-90s/clean/api.h>
+  - lower_c_name: kyber768
+    upper_c_name: KYBER768
+    pqclean_prefix: PQCLEAN_KYBER768_CLEAN
+    libname: kyber768_clean
+    src: crypto_kem/kyber768/clean
+    headers:
+      - <crypto_kem/kyber768/clean/api.h>
+  - lower_c_name: kyber768_90s
+    upper_c_name: KYBER768_90S
+    pqclean_prefix: PQCLEAN_KYBER76890S_CLEAN
+    libname: kyber768-90s_clean
+    src: crypto_kem/kyber768-90s/clean
+    headers:
+      - <crypto_kem/kyber768-90s/clean/api.h>
+  - lower_c_name: kyber1024
+    upper_c_name: KYBER1024
+    pqclean_prefix: PQCLEAN_KYBER1024_CLEAN
+    libname: kyber1024_clean
+    src: crypto_kem/kyber1024/clean
+    headers:
+      - <crypto_kem/kyber1024/clean/api.h>
+  - lower_c_name: kyber1024_90s
+    upper_c_name: KYBER1024_90S
+    pqclean_prefix: PQCLEAN_KYBER102490S_CLEAN
+    libname: kyber1024-90s_clean
+    src: crypto_kem/kyber1024-90s/clean
+    headers:
+      - <crypto_kem/kyber1024-90s/clean/api.h>
+  # - lower_c_name: mceliece348864
+  #   upper_c_name: MCELIECE348864
+  #   pqclean_prefix: PQCLEAN_MCELIECE348864_CLEAN
+  #   libname: mceliece348864_clean
+  #   src: crypto_kem/mceliece348864/clean
+  #   headers:
+  #     - <crypto_kem/mceliece348864f/clean/api.h>
+  # - lower_c_name: mceliece348864f
+  #   upper_c_name: MCELIECE348864F
+  #   pqclean_prefix: PQCLEAN_MCELIECE348864F_CLEAN
+  #   libname: mceliece348864f_clean
+  #   src: crypto_kem/mceliece348864f/clean
+  #   headers:
+  #     - <crypto_kem/mceliece348864f/clean/api.h>
+  # - lower_c_name: mceliece460896
+  #   upper_c_name: MCELIECE460896
+  #   pqclean_prefix: PQCLEAN_MCELIECE460896_CLEAN
+  #   libname: mceliece460896_clean
+  #   src: crypto_kem/mceliece460896/clean
+  #   headers:
+  #     - <crypto_kem/mceliece460896f/clean/api.h>
+  # - lower_c_name: mceliece460896f
+  #   upper_c_name: MCELIECE460896F
+  #   pqclean_prefix: PQCLEAN_MCELIECE460896F_CLEAN
+  #   libname: mceliece460896f_clean
+  #   src: crypto_kem/mceliece460896f/clean
+  #   headers:
+  #     - <crypto_kem/mceliece460896f/clean/api.h>
+  # - lower_c_name: mceliece6688128
+  #   upper_c_name: MCELIECE6688128
+  #   pqclean_prefix: PQCLEAN_MCELIECE6688128_CLEAN
+  #   libname: mceliece6688128_clean
+  #   src: crypto_kem/mceliece6688128/clean
+  #   headers:
+  #     - <crypto_kem/mceliece6688128f/clean/api.h>
+  # - lower_c_name: mceliece6688128f
+  #   upper_c_name: MCELIECE6688128F
+  #   pqclean_prefix: PQCLEAN_MCELIECE6688128F_CLEAN
+  #   libname: mceliece6688128f_clean
+  #   src: crypto_kem/mceliece6688128f/clean
+  #   headers:
+  #     - <crypto_kem/mceliece6688128f/clean/api.h>
+  # - lower_c_name: mceliece6960119
+  #   upper_c_name: MCELIECE6960119
+  #   pqclean_prefix: PQCLEAN_MCELIECE6960119_CLEAN
+  #   libname: mceliece6960119_clean
+  #   src: crypto_kem/mceliece6960119/clean
+  #   headers:
+  #     - <crypto_kem/mceliece6960119f/clean/api.h>
+  # - lower_c_name: mceliece6960119f
+  #   upper_c_name: MCELIECE6960119F
+  #   pqclean_prefix: PQCLEAN_MCELIECE6960119F_CLEAN
+  #   libname: mceliece6960119f_clean
+  #   src: crypto_kem/mceliece6960119f/clean
+  #   headers:
+  #     - <crypto_kem/mceliece6960119f/clean/api.h>
+  # - lower_c_name: mceliece8192128
+  #   upper_c_name: MCELIECE8192128
+  #   pqclean_prefix: PQCLEAN_MCELIECE8192128_CLEAN
+  #   libname: mceliece8192128_clean
+  #   src: crypto_kem/mceliece8192128/clean
+  #   headers:
+  #     - <crypto_kem/mceliece8192128f/clean/api.h>
+  # - lower_c_name: mceliece8192128f
+  #   upper_c_name: MCELIECE8192128F
+  #   pqclean_prefix: PQCLEAN_MCELIECE8192128F_CLEAN
+  #   libname: mceliece8192128f_clean
+  #   src: crypto_kem/mceliece8192128f/clean
+  #   headers:
+  #     - <crypto_kem/mceliece8192128f/clean/api.h>
+sign_algorithms:
+  - lower_c_name: dilithium2
+    upper_c_name: dilithium2
+    pqclean_prefix: PQCLEAN_DILITHIUM2_CLEAN
+    libname: dilithium2_clean
+    src: crypto_sign/dilithium2/clean
+    headers:
+      - <crypto_sign/dilithium2/clean/api.h>
+  - lower_c_name: dilithium2aes
+    upper_c_name: dilithium2aes
+    pqclean_prefix: PQCLEAN_DILITHIUM2AES_CLEAN
+    libname: dilithium2aes_clean
+    src: crypto_sign/dilithium2aes/clean
+    headers:
+      - <crypto_sign/dilithium2aes/clean/api.h>
+  - lower_c_name: dilithium3
+    upper_c_name: dilithium3
+    pqclean_prefix: PQCLEAN_DILITHIUM3_CLEAN
+    libname: dilithium3_clean
+    src: crypto_sign/dilithium3/clean
+    headers:
+      - <crypto_sign/dilithium3/clean/api.h>
+  - lower_c_name: dilithium3aes
+    upper_c_name: dilithium3aes
+    pqclean_prefix: PQCLEAN_DILITHIUM3AES_CLEAN
+    libname: dilithium3aes_clean
+    src: crypto_sign/dilithium3aes/clean
+    headers:
+      - <crypto_sign/dilithium3aes/clean/api.h>
+  - lower_c_name: dilithium5
+    upper_c_name: dilithium5
+    pqclean_prefix: PQCLEAN_DILITHIUM5_CLEAN
+    libname: dilithium5_clean
+    src: crypto_sign/dilithium5/clean
+    headers:
+      - <crypto_sign/dilithium5/clean/api.h>
+  - lower_c_name: dilithium5aes
+    upper_c_name: dilithium5aes
+    pqclean_prefix: PQCLEAN_DILITHIUM5AES_CLEAN
+    libname: dilithium5aes_clean
+    src: crypto_sign/dilithium5aes/clean
+    headers:
+      - <crypto_sign/dilithium5aes/clean/api.h>
+  - lower_c_name: falcon512
+    upper_c_name: FALCON512
+    pqclean_prefix: PQCLEAN_FALCON512_CLEAN
+    libname: falcon-512_clean
+    src: crypto_sign/falcon-512/clean
+    headers:
+      - <crypto_sign/falcon-512/clean/api.h>
+  - lower_c_name: falcon1024
+    upper_c_name: FALCON1024
+    pqclean_prefix: PQCLEAN_FALCON1024_CLEAN
+    libname: falcon-1024_clean
+    src: crypto_sign/falcon-1024/clean
+    headers:
+      - <crypto_sign/falcon-1024/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_128f_robust
+    upper_c_name: SPHINCS_PLUS_HARAKA_128F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-haraka-128f-robust_clean
+    src: crypto_sign/sphincs-haraka-128f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-128f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_128f_simple
+    upper_c_name: SPHINCS_PLUS_HARAKA_128F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-haraka-128f-simple_clean
+    src: crypto_sign/sphincs-haraka-128f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-128f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_128s_robust
+    upper_c_name: SPHINCS_PLUS_HARAKA_128S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-haraka-128s-robust_clean
+    src: crypto_sign/sphincs-haraka-128s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-128s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_128s_simple
+    upper_c_name: SPHINCS_PLUS_HARAKA_128S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-haraka-128s-simple_clean
+    src: crypto_sign/sphincs-haraka-128s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-128s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_192f_robust
+    upper_c_name: SPHINCS_PLUS_HARAKA_192F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-haraka-192f-robust_clean
+    src: crypto_sign/sphincs-haraka-192f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-192f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_192f_simple
+    upper_c_name: SPHINCS_PLUS_HARAKA_192F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-haraka-192f-simple_clean
+    src: crypto_sign/sphincs-haraka-192f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-192f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_192s_robust
+    upper_c_name: SPHINCS_PLUS_HARAKA_192S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-haraka-192s-robust_clean
+    src: crypto_sign/sphincs-haraka-192s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-192s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_192s_simple
+    upper_c_name: SPHINCS_PLUS_HARAKA_192S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-haraka-192s-simple_clean
+    src: crypto_sign/sphincs-haraka-192s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-192s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_256f_robust
+    upper_c_name: SPHINCS_PLUS_HARAKA_256F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-haraka-256f-robust_clean
+    src: crypto_sign/sphincs-haraka-256f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-256f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_256f_simple
+    upper_c_name: SPHINCS_PLUS_HARAKA_256F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-haraka-256f-simple_clean
+    src: crypto_sign/sphincs-haraka-256f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-256f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_256s_robust
+    upper_c_name: SPHINCS_PLUS_HARAKA_256S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-haraka-256s-robust_clean
+    src: crypto_sign/sphincs-haraka-256s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-256s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_haraka_256s_simple
+    upper_c_name: SPHINCS_PLUS_HARAKA_256S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-haraka-256s-simple_clean
+    src: crypto_sign/sphincs-haraka-256s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-haraka-256s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_128f_robust
+    upper_c_name: SPHINCS_PLUS_SHA2_128F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-sha2-128f-robust_clean
+    src: crypto_sign/sphincs-sha2-128f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-128f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_128f_simple
+    upper_c_name: SPHINCS_PLUS_SHA2_128F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-sha2-128f-simple_clean
+    src: crypto_sign/sphincs-sha2-128f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-128f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_128s_robust
+    upper_c_name: SPHINCS_PLUS_SHA2_128S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-sha2-128s-robust_clean
+    src: crypto_sign/sphincs-sha2-128s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-128s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_128s_simple
+    upper_c_name: SPHINCS_PLUS_SHA2_128S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-sha2-128s-simple_clean
+    src: crypto_sign/sphincs-sha2-128s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-128s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_192f_robust
+    upper_c_name: SPHINCS_PLUS_SHA2_192F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-sha2-192f-robust_clean
+    src: crypto_sign/sphincs-sha2-192f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-192f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_192f_simple
+    upper_c_name: SPHINCS_PLUS_SHA2_192F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-sha2-192f-simple_clean
+    src: crypto_sign/sphincs-sha2-192f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-192f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_192s_robust
+    upper_c_name: SPHINCS_PLUS_SHA2_192S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-sha2-192s-robust_clean
+    src: crypto_sign/sphincs-sha2-192s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-192s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_192s_simple
+    upper_c_name: SPHINCS_PLUS_SHA2_192S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-sha2-192s-simple_clean
+    src: crypto_sign/sphincs-sha2-192s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-192s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_256f_robust
+    upper_c_name: SPHINCS_PLUS_SHA2_256F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-sha2-256f-robust_clean
+    src: crypto_sign/sphincs-sha2-256f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-256f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_256f_simple
+    upper_c_name: SPHINCS_PLUS_SHA2_256F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-sha2-256f-simple_clean
+    src: crypto_sign/sphincs-sha2-256f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-256f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_256s_robust
+    upper_c_name: SPHINCS_PLUS_SHA2_256S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-sha2-256s-robust_clean
+    src: crypto_sign/sphincs-sha2-256s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-256s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_sha2_256s_simple
+    upper_c_name: SPHINCS_PLUS_SHA2_256S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-sha2-256s-simple_clean
+    src: crypto_sign/sphincs-sha2-256s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-sha2-256s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_128f_robust
+    upper_c_name: SPHINCS_PLUS_SHAKE_128F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-shake-128f-robust_clean
+    src: crypto_sign/sphincs-shake-128f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-shake-128f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_128f_simple
+    upper_c_name: SPHINCS_PLUS_SHAKE_128F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-shake-128f-simple_clean
+    src: crypto_sign/sphincs-shake-128f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-shake-128f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_128s_robust
+    upper_c_name: SPHINCS_PLUS_SHAKE_128S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-shake-128s-robust_clean
+    src: crypto_sign/sphincs-shake-128s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-shake-128s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_128s_simple
+    upper_c_name: SPHINCS_PLUS_SHAKE_128S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-shake-128s-simple_clean
+    src: crypto_sign/sphincs-shake-128s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-shake-128s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_192f_robust
+    upper_c_name: SPHINCS_PLUS_SHAKE_192F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-shake-192f-robust_clean
+    src: crypto_sign/sphincs-shake-192f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-shake-192f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_192f_simple
+    upper_c_name: SPHINCS_PLUS_SHAKE_192F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-shake-192f-simple_clean
+    src: crypto_sign/sphincs-shake-192f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-shake-192f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_192s_robust
+    upper_c_name: SPHINCS_PLUS_SHAKE_192S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-shake-192s-robust_clean
+    src: crypto_sign/sphincs-shake-192s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-shake-192s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_192s_simple
+    upper_c_name: SPHINCS_PLUS_SHAKE_192S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-shake-192s-simple_clean
+    src: crypto_sign/sphincs-shake-192s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-shake-192s-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_256f_robust
+    upper_c_name: SPHINCS_PLUS_SHAKE_256F_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN
+    seedable: true
+    libname: sphincs-shake-256f-robust_clean
+    src: crypto_sign/sphincs-shake-256f-robust/clean
+    headers:
+      - <crypto_sign/sphincs-shake-256f-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_256f_simple
+    upper_c_name: SPHINCS_PLUS_SHAKE_256F_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-shake-256f-simple_clean
+    src: crypto_sign/sphincs-shake-256f-simple/clean
+    headers:
+      - <crypto_sign/sphincs-shake-256f-simple/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_256s_robust
+    upper_c_name: SPHINCS_PLUS_SHAKE_256S_ROBUST
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN
+    seedable: true
+    libname: sphincs-shake-256s-robust_clean
+    src: crypto_sign/sphincs-shake-256s-robust/clean
+    headers:
+      - <crypto_sign/sphincs-shake-256s-robust/clean/api.h>
+  - lower_c_name: sphincs_plus_shake_256s_simple
+    upper_c_name: SPHINCS_PLUS_SHAKE_256S_SIMPLE
+    pqclean_prefix: PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN
+    seedable: true
+    libname: sphincs-shake-256s-simple_clean
+    src: crypto_sign/sphincs-shake-256s-simple/clean
+    headers:
+      - <crypto_sign/sphincs-shake-256s-simple/clean/api.h>

@@ -67,5 +67,12 @@ _build
 rebar3.crashdump
 /rebar3
 
+# erlfmt exclusions.
+/_erlfmt_build/
+/erlfmt
+
+# Editor eclusions.
+/.vscode/
+
 # Other test artifacts.
 /tmp

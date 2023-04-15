@@ -1,0 +1,19 @@
+{application, pqclean, [
+	{description, "A new library"},
+	{vsn, "0.0.1"},
+	{id, "git"},
+	{registered, []},
+	{applications, [
+		kernel,
+		stdlib
+	]},
+	{modules, []},
+	{licenses, ["MIT"]},
+	{links, [{"Github", "https://github.com/potatosalad/erlang-pqclean"}]},
+	{include_paths, [
+		"build.config",
+		"erlang.mk",
+		"Makefile",
+		"c_deps/PQClean/"
+	]}
+]}.

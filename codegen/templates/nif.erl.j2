@@ -1,0 +1,151 @@
+%%% % @format
+-module(pqclean_nif).
+-compile(warn_missing_spec).
+-author("potatosaladx@gmail.com").
+
+-on_load(init/0).
+
+%% NIF API
+-export([
+    {% for kem in kem_algorithms %}
+    {{ kem.lower_c_name }}_info/0,
+    {{ kem.lower_c_name }}_keypair/0,
+    {{ kem.lower_c_name }}_encapsulate/1,
+    {{ kem.lower_c_name }}_decapsulate/2,
+    {% endfor %}
+    {% for sig in sign_algorithms %}
+    {{ sig.lower_c_name }}_info/0,
+    {{ sig.lower_c_name }}_keypair/0,
+    {% if sig['seedable'] %}
+    {{ sig.lower_c_name }}_keypair/1,
+    {% endif %}
+    {{ sig.lower_c_name }}_sign/2,
+    {{ sig.lower_c_name }}_verify/3{% if not loop.last %},
+    {% endif %}
+    {% endfor %}
+]).
+
+%% Internal NIF API
+-export([
+    init/0
+]).
+
+%% Types
+-type crypto_kem_info() :: #{
+    type := kem,
+    name := string(),
+    secretkeybytes := non_neg_integer(),
+    publickeybytes := non_neg_integer(),
+    ciphertextbytes := non_neg_integer(),
+    sharedsecretbytes := non_neg_integer()
+}.
+
+-type crypto_sign_info() :: #{
+    type := sign,
+    name := string(),
+    secretkeybytes := non_neg_integer(),
+    publickeybytes := non_neg_integer(),
+    signaturebytes := non_neg_integer(),
+    seedbytes => non_neg_integer()
+}.
+
+-export_type([
+    crypto_kem_info/0,
+    crypto_sign_info/0
+]).
+
+{% for kem in kem_algorithms %}
+-type {{ kem.lower_c_name }}_secret_key() :: <<_:{{ kem.meta['length-secret-key'] * 8 }}>>.
+-type {{ kem.lower_c_name }}_public_key() :: <<_:{{ kem.meta['length-public-key'] * 8 }}>>.
+-type {{ kem.lower_c_name }}_cipher_text() :: <<_:{{ kem.meta['length-ciphertext'] * 8 }}>>.
+-type {{ kem.lower_c_name }}_shared_secret() :: <<_:{{ kem.meta['length-shared-secret'] * 8 }}>>.
+
+-export_type([
+    {{ kem.lower_c_name }}_secret_key/0,
+    {{ kem.lower_c_name }}_public_key/0,
+    {{ kem.lower_c_name }}_cipher_text/0,
+    {{ kem.lower_c_name }}_shared_secret/0
+]).
+
+{% endfor %}
+
+{% for sig in sign_algorithms %}
+-type {{ sig.lower_c_name }}_secret_key() :: <<_:{{ sig.meta['length-secret-key'] * 8 }}>>.
+-type {{ sig.lower_c_name }}_public_key() :: <<_:{{ sig.meta['length-public-key'] * 8 }}>>.
+{% if sig['seedable'] %}
+-type {{ sig.lower_c_name }}_seed() :: <<_:{{ sig.meta['length-seed'] * 8 }}>>.
+{% endif %}
+-type {{ sig.lower_c_name }}_message() :: binary().
+-type {{ sig.lower_c_name }}_signature() :: <<_:{{ sig.meta['length-signature'] * 8 }}>> | binary().
+
+-export_type([
+    {{ sig.lower_c_name }}_secret_key/0,
+    {{ sig.lower_c_name }}_public_key/0,
+    {% if sig['seedable'] %}
+    {{ sig.lower_c_name }}_seed/0,
+    {% endif %}
+    {{ sig.lower_c_name }}_message/0,
+    {{ sig.lower_c_name }}_signature/0
+]).
+
+{% endfor %}
+
+%%%=============================================================================
+%%% NIF API functions
+%%%=============================================================================
+
+{% for kem in kem_algorithms %}
+-spec {{ kem.lower_c_name }}_info() -> crypto_kem_info().
+{{ kem.lower_c_name }}_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+-spec {{ kem.lower_c_name }}_keypair() -> {PublicKey, SecretKey} when PublicKey :: {{ kem.lower_c_name }}_public_key(), SecretKey :: {{ kem.lower_c_name }}_secret_key().
+{{ kem.lower_c_name }}_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+-spec {{ kem.lower_c_name }}_encapsulate(PublicKey) -> {CipherText, SharedSecret} when PublicKey :: {{ kem.lower_c_name }}_public_key(), CipherText :: {{ kem.lower_c_name }}_cipher_text(), SharedSecret :: {{ kem.lower_c_name }}_shared_secret().
+{{ kem.lower_c_name }}_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+-spec {{ kem.lower_c_name }}_decapsulate(CipherText, SecretKey) -> SharedSecret when CipherText :: {{ kem.lower_c_name }}_cipher_text(), SecretKey :: {{ kem.lower_c_name }}_secret_key(), SharedSecret :: {{ kem.lower_c_name }}_shared_secret().
+{{ kem.lower_c_name }}_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+{% endfor %}
+
+{% for sig in sign_algorithms %}
+-spec {{ sig.lower_c_name }}_info() -> crypto_sign_info().
+{{ sig.lower_c_name }}_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+-spec {{ sig.lower_c_name }}_keypair() -> {PublicKey, SecretKey} when PublicKey :: {{ sig.lower_c_name }}_public_key(), SecretKey :: {{ sig.lower_c_name }}_secret_key().
+{{ sig.lower_c_name }}_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+{% if sig['seedable'] %}
+-spec {{ sig.lower_c_name }}_keypair(Seed) -> {PublicKey, SecretKey} when Seed :: {{ sig.lower_c_name }}_seed(), PublicKey :: {{ sig.lower_c_name }}_public_key(), SecretKey :: {{ sig.lower_c_name }}_secret_key().
+{{ sig.lower_c_name }}_keypair(_Seed) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+{% endif %}
+
+-spec {{ sig.lower_c_name }}_sign(Message, SecretKey) -> Signature when Message :: {{ sig.lower_c_name }}_message(), SecretKey :: {{ sig.lower_c_name }}_secret_key(), Signature :: {{ sig.lower_c_name }}_signature().
+{{ sig.lower_c_name }}_sign(_Message, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+-spec {{ sig.lower_c_name }}_verify(Signature, Message, PublicKey) -> Signature when Signature :: {{ sig.lower_c_name }}_signature(), Message :: {{ sig.lower_c_name }}_message(), PublicKey :: {{ sig.lower_c_name }}_public_key().
+{{ sig.lower_c_name }}_verify(_Signature, _Message, _PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+{% endfor %}
+
+%%%-----------------------------------------------------------------------------
+%%% Internal functions
+%%%-----------------------------------------------------------------------------
+
+%% @private
+-spec init() -> ok | Error when
+    Error :: {error, {Reason, Text :: string()}},
+    Reason :: load_failed | bad_lib | load | reload | upgrade | old_code.
+init() ->
+    SoName = filename:join([pqclean:priv_dir(), ?MODULE_STRING]),
+    erlang:load_nif(SoName, 0).

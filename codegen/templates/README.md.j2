@@ -1,0 +1,19 @@
+# pqclean NIF
+
+Work-in-Progress
+
+## KEM Algorithm Support
+
+| KEM Algorithm               | NIST Level    | Public Key | Secret Key | Cipher Text | Shared Secret |
+| --------------------------- | -------------:| ----------:| ----------:| -----------:| -------------:|
+{% for kem in kem_algorithms %}
+| {{ kem.meta.name }} | KEM | {{ kem.meta['claimed-nist-level'] }} | {{ kem.meta['length-public-key'] }} | {{ kem.meta['length-secret-key'] }} | {{ kem.meta['length-ciphertext'] }} | {{ kem.meta['length-shared-secret'] }} |
+{% endfor %}
+
+## Signature Algorithm Support
+
+| Signature Algorithm         | NIST Level    | Public Key | Secret Key | Signature | Seed |
+| --------------------------- | -------------:| ----------:| ----------:| ---------:| ----:|
+{% for sig in sign_algorithms %}
+| {{ sig.meta.name }} | {{ sig.meta['claimed-nist-level'] }} | {{ sig.meta['length-public-key'] }} | {{ sig.meta['length-secret-key'] }} | {{ sig.meta['length-signature'] }} | {{ sig.meta['length-seed'] }} |
+{% endfor %}

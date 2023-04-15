@@ -1,0 +1,135 @@
+#include "pqclean_nif.h"
+
+#include <stdbool.h>
+#include <unistd.h>
+
+{% for kem in kem_algorithms %}
+#include "pqclean_nif_{{ kem.lower_c_name }}.h"
+{% endfor %}
+
+{% for sig in sign_algorithms %}
+#include "pqclean_nif_{{ sig.lower_c_name }}.h"
+{% endfor %}
+
+/* Types */
+
+/* Global Variables */
+
+static pqclean_nif_atom_table_t pqclean_nif_atom_table_internal;
+pqclean_nif_atom_table_t *pqclean_nif_atom_table = &pqclean_nif_atom_table_internal;
+
+/* Static Variables */
+
+/* Resource Type Functions (Declarations) */
+
+/* NIF Function Declarations */
+
+/* NIF Function Definitions */
+
+/* NIF Callbacks */
+
+static ErlNifFunc pqclean_nif_funcs[] = {
+    {% for kem in kem_algorithms %}
+    {"{{ kem.lower_c_name }}_info", 0, pqclean_nif_{{ kem.lower_c_name }}_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"{{ kem.lower_c_name }}_keypair", 0, pqclean_nif_{{ kem.lower_c_name }}_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"{{ kem.lower_c_name }}_encapsulate", 1, pqclean_nif_{{ kem.lower_c_name }}_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"{{ kem.lower_c_name }}_decapsulate", 2, pqclean_nif_{{ kem.lower_c_name }}_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {% endfor %}
+
+    {% for sig in sign_algorithms %}
+    {"{{ sig.lower_c_name }}_info", 0, pqclean_nif_{{ sig.lower_c_name }}_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"{{ sig.lower_c_name }}_keypair", 0, pqclean_nif_{{ sig.lower_c_name }}_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {% if sig['seedable'] %}
+    {"{{ sig.lower_c_name }}_keypair", 1, pqclean_nif_{{ sig.lower_c_name }}_keypair_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {% endif %}
+    {"{{ sig.lower_c_name }}_sign", 2, pqclean_nif_{{ sig.lower_c_name }}_sign_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"{{ sig.lower_c_name }}_verify", 3, pqclean_nif_{{ sig.lower_c_name }}_verify_3, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {% endfor %}
+};
+
+static int pqclean_nif_instances = 0;
+
+static void pqclean_nif_make_atoms(ErlNifEnv *env);
+static int pqclean_nif_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info);
+static int pqclean_nif_upgrade(ErlNifEnv *env, void **new_priv_data, void **old_priv_data, ERL_NIF_TERM load_info);
+static void pqclean_nif_unload(ErlNifEnv *env, void *priv_data);
+
+static void
+pqclean_nif_make_atoms(ErlNifEnv *env)
+{
+#define MAKE_ATOM(Id, Value)                                                                                                       \
+    {                                                                                                                              \
+        pqclean_nif_atom_table->ATOM_##Id = enif_make_atom(env, Value);                                                            \
+    }
+    MAKE_ATOM(badarg, "badarg");
+    MAKE_ATOM(closed, "closed");
+    MAKE_ATOM(error, "error");
+    MAKE_ATOM(false, "false");
+    MAKE_ATOM(latin1, "latin1");
+    MAKE_ATOM(nil, "nil");
+    MAKE_ATOM(no_context, "no_context");
+    MAKE_ATOM(not_owner, "not_owner");
+    MAKE_ATOM(notsup, "notsup");
+    MAKE_ATOM(ok, "ok");
+    MAKE_ATOM(true, "true");
+    MAKE_ATOM(undefined, "undefined");
+    MAKE_ATOM(utf8, "utf8");
+#undef MAKE_ATOM
+}
+
+static int
+pqclean_nif_load(ErlNifEnv *env, void **priv_data, ERL_NIF_TERM load_info)
+{
+    int retval = 0;
+
+    /* Initialize resource types. */
+
+    /* Initialize private data. */
+    (void)priv_data;
+    (void)load_info;
+
+    /* Initialize common atoms. */
+    (void)pqclean_nif_make_atoms(env);
+
+    pqclean_nif_instances++;
+
+    return retval;
+}
+
+static int
+pqclean_nif_upgrade(ErlNifEnv *env, void **new_priv_data, void **old_priv_data, ERL_NIF_TERM load_info)
+{
+    int retval = 0;
+
+    /* Upgrade resource types. */
+
+    /* Upgrade private data. */
+    (void)env;
+    (void)new_priv_data;
+    (void)old_priv_data;
+    (void)load_info;
+
+    /* Initialize common atoms */
+    (void)pqclean_nif_make_atoms(env);
+
+    pqclean_nif_instances++;
+
+    return retval;
+}
+
+static void
+pqclean_nif_unload(ErlNifEnv *env, void *priv_data)
+{
+    (void)env;
+
+    if (pqclean_nif_instances == 1) {
+        /* Destroy private data. */
+        (void)priv_data;
+    }
+
+    pqclean_nif_instances--;
+
+    return;
+}
+
+ERL_NIF_INIT(pqclean_nif, pqclean_nif_funcs, pqclean_nif_load, NULL, pqclean_nif_upgrade, pqclean_nif_unload);

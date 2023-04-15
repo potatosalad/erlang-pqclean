@@ -1,0 +1,21 @@
+#ifndef PQCLEAN_NIF_{{ upper_c_name }}_H
+#define PQCLEAN_NIF_{{ upper_c_name }}_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "pqclean_nif.h"
+
+/* NIF Function Declarations */
+
+extern ERL_NIF_TERM pqclean_nif_{{ lower_c_name }}_info_0(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+extern ERL_NIF_TERM pqclean_nif_{{ lower_c_name }}_keypair_0(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+extern ERL_NIF_TERM pqclean_nif_{{ lower_c_name }}_encapsulate_1(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+extern ERL_NIF_TERM pqclean_nif_{{ lower_c_name }}_decapsulate_2(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
