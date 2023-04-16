@@ -233,7 +233,7 @@ $(PQCLEAN_COMMON_OUTPUT): $(PQCLEAN_SRC_DIR) $(PQCLEAN_COMMON_OBJECTS)
 
 {% for make_output in make_outputs %}
 $({{ make_output.target }}): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@)
+	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
 {% endfor %}
 
