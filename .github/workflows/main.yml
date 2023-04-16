@@ -35,7 +35,7 @@ jobs:
         run: |
           make distclean
           make erlang-mk
-          make ct
+          V=3 make ct
 
       - name: Logs
         uses: actions/upload-artifact@v2-preview
