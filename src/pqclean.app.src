@@ -1,5 +1,5 @@
 {application, pqclean, [
-	{description, "A new library"},
+	{description, "Post-Quantum Cryptography NIF based on PQClean for Erlang and Elixir"},
 	{vsn, "0.0.1"},
 	{id, "git"},
 	{registered, []},

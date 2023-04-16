@@ -1,0 +1,188 @@
+%%% % @format
+-module(pqclean_nif_SUITE).
+
+-include_lib("common_test/include/ct.hrl").
+-include_lib("stdlib/include/assert.hrl").
+
+-behaviour(ct_suite).
+
+%% ct callbacks
+-export([
+    all/0,
+    groups/0,
+    init_per_suite/1,
+    end_per_suite/1,
+    init_per_group/2,
+    end_per_group/2
+]).
+
+%% Tests.
+-export([
+    {% for kem in kem_algorithms %}
+    test_{{ kem.lower_c_name }}_info_0/1,
+    test_{{ kem.lower_c_name }}_keypair_0/1,
+    test_{{ kem.lower_c_name }}_encapsulate_1/1,
+    test_{{ kem.lower_c_name }}_decapsulate_2/1,
+    {% endfor %}
+    {% for sig in sign_algorithms %}
+    test_{{ sig.lower_c_name }}_info_0/1,
+    test_{{ sig.lower_c_name }}_keypair_0/1,
+    {% if sig['seedable'] %}
+    test_{{ sig.lower_c_name }}_keypair_1/1,
+    {% endif %}
+    test_{{ sig.lower_c_name }}_sign_2/1,
+    test_{{ sig.lower_c_name }}_verify_3/1{% if not loop.last %},{% endif %}
+
+    {% endfor %}
+]).
+
+all() ->
+    [
+        {group, kem},
+        {group, sign}
+    ].
+
+groups() ->
+    [
+        {kem, [parallel], [
+            {% for kem in kem_algorithms %}
+            test_{{ kem.lower_c_name }}_info_0,
+            test_{{ kem.lower_c_name }}_keypair_0,
+            test_{{ kem.lower_c_name }}_encapsulate_1,
+            test_{{ kem.lower_c_name }}_decapsulate_2{% if not loop.last %},{% endif %}
+
+            {% endfor %}
+        ]},
+        {sign, [parallel], [
+            {% for sig in sign_algorithms %}
+            test_{{ sig.lower_c_name }}_info_0,
+            test_{{ sig.lower_c_name }}_keypair_0,
+            {% if sig['seedable'] %}
+            test_{{ sig.lower_c_name }}_keypair_1,
+            {% endif %}
+            test_{{ sig.lower_c_name }}_sign_2,
+            test_{{ sig.lower_c_name }}_verify_3{% if not loop.last %},{% endif %}
+
+            {% endfor %}
+        ]}
+    ].
+
+init_per_suite(Config) ->
+    _ = application:ensure_all_started(pqclean),
+    Config.
+
+end_per_suite(_Config) ->
+    _ = application:stop(pqclean),
+    ok.
+
+init_per_group(_Group, Config) ->
+    Config.
+
+end_per_group(_Group, _Config) ->
+    % libdecaf_ct:stop(Config),
+    ok.
+
+%%====================================================================
+%% Tests
+%%====================================================================
+
+{% for kem in kem_algorithms %}
+test_{{ kem.lower_c_name }}_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "{{ kem.meta['name'] }}",
+            secretkeybytes := {{ kem.meta['length-secret-key'] }},
+            publickeybytes := {{ kem.meta['length-public-key'] }},
+            ciphertextbytes := {{ kem.meta['length-ciphertext'] }},
+            sharedsecretbytes := {{ kem.meta['length-shared-secret'] }}
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:{{ kem.lower_c_name }}_info()
+    ),
+    ok.
+
+test_{{ kem.lower_c_name }}_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:{{ kem.meta['length-public-key'] }}/bytes>>, <<_SK:{{ kem.meta['length-secret-key'] }}/bytes>>},
+        pqclean_nif:{{ kem.lower_c_name }}_keypair()
+    ),
+    ok.
+
+test_{{ kem.lower_c_name }}_encapsulate_1(_Config) ->
+    {<<PK:{{ kem.meta['length-public-key'] }}/bytes>>, <<_SK:{{ kem.meta['length-secret-key'] }}/bytes>>} = pqclean_nif:{{ kem.lower_c_name }}_keypair(),
+    ?assertMatch(
+        {<<_CT:{{ kem.meta['length-ciphertext'] }}/bytes>>, <<_SS:{{ kem.meta['length-shared-secret'] }}/bytes>>},
+        pqclean_nif:{{ kem.lower_c_name }}_encapsulate(PK)
+    ),
+    ok.
+
+test_{{ kem.lower_c_name }}_decapsulate_2(_Config) ->
+    {<<PK:{{ kem.meta['length-public-key'] }}/bytes>>, <<SK:{{ kem.meta['length-secret-key'] }}/bytes>>} = pqclean_nif:{{ kem.lower_c_name }}_keypair(),
+    {<<CT:{{ kem.meta['length-ciphertext'] }}/bytes>>, <<SS:{{ kem.meta['length-shared-secret'] }}/bytes>>} = pqclean_nif:{{ kem.lower_c_name }}_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:{{ kem.lower_c_name }}_decapsulate(CT, SK)),
+    ok.
+
+{% endfor %}
+
+{% for sig in sign_algorithms %}
+test_{{ sig.lower_c_name }}_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := sign,
+            name := "{{ sig.meta['name'] }}",
+            secretkeybytes := {{ sig.meta['length-secret-key'] }},
+            publickeybytes := {{ sig.meta['length-public-key'] }},
+            {% if sig['seedable'] %}
+            signaturebytes := {{ sig.meta['length-signature'] }},
+            seedbytes := {{ sig.meta['length-seed'] }}
+            {% else %}
+            signaturebytes := {{ sig.meta['length-signature'] }}
+            {% endif %}
+        } when map_size(CryptoKemInfo) =:= {% if sig['seedable'] %}6{% else %}5{% endif %},
+        pqclean_nif:{{ sig.lower_c_name }}_info()
+    ),
+    ok.
+
+test_{{ sig.lower_c_name }}_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:{{ sig.meta['length-public-key'] }}/bytes>>, <<_SK:{{ sig.meta['length-secret-key'] }}/bytes>>},
+        pqclean_nif:{{ sig.lower_c_name }}_keypair()
+    ),
+    ok.
+
+{% if sig['seedable'] %}
+test_{{ sig.lower_c_name }}_keypair_1(_Config) ->
+    ?assertMatch(
+        {<<_PK:{{ sig.meta['length-public-key'] }}/bytes>>, <<_SK:{{ sig.meta['length-secret-key'] }}/bytes>>},
+        pqclean_nif:{{ sig.lower_c_name }}_keypair(<<0:{{ sig.meta['length-seed'] * 8 }}>>)
+    ),
+    ok.
+
+{% endif %}
+
+test_{{ sig.lower_c_name }}_sign_2(_Config) ->
+    M = crypto:strong_rand_bytes(rand:uniform(128)),
+    {<<_PK:{{ sig.meta['length-public-key'] }}/bytes>>, <<SK:{{ sig.meta['length-secret-key'] }}/bytes>>} = pqclean_nif:{{ sig.lower_c_name }}_keypair(),
+    {% if sig.lower_c_name.startswith('falcon') %}
+    ?assertMatch(Sig when is_binary(Sig) andalso byte_size(Sig) =< {{ sig.meta['length-signature'] }}, pqclean_nif:{{ sig.lower_c_name }}_sign(M, SK)),
+    {% else %}
+    ?assertMatch(<<_Sig:{{ sig.meta['length-signature'] }}/bytes>>, pqclean_nif:{{ sig.lower_c_name }}_sign(M, SK)),
+    {% endif %}
+    ok.
+
+test_{{ sig.lower_c_name }}_verify_3(_Config) ->
+    M = crypto:strong_rand_bytes(rand:uniform(128)),
+    {<<PK:{{ sig.meta['length-public-key'] }}/bytes>>, <<SK:{{ sig.meta['length-secret-key'] }}/bytes>>} = pqclean_nif:{{ sig.lower_c_name }}_keypair(),
+    {% if sig.lower_c_name.startswith('falcon') %}
+    <<Sig/bytes>> = pqclean_nif:{{ sig.lower_c_name }}_sign(M, SK),
+    {% else %}
+    <<Sig:{{ sig.meta['length-signature'] }}/bytes>> = pqclean_nif:{{ sig.lower_c_name }}_sign(M, SK),
+    {% endif %}
+    ?assertEqual(true, pqclean_nif:{{ sig.lower_c_name }}_verify(Sig, M, PK)),
+    ok.
+
+{% endfor %}
+
+%%%-------------------------------------------------------------------
+%%% Internal functions
+%%%-------------------------------------------------------------------

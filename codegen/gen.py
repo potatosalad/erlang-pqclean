@@ -24,6 +24,7 @@ if __name__ == "__main__":
     sign_c_template = env.get_template('sign.c.j2')
     nif_c_template = env.get_template('nif.c.j2')
     nif_erl_template = env.get_template('nif.erl.j2')
+    nif_suite_erl_template = env.get_template('nif_SUITE.erl.j2')
     makefile_template = env.get_template('Makefile.j2')
     readme_template = env.get_template('README.md.j2')
     for kem_data in config['kem_algorithms']:
@@ -79,6 +80,10 @@ if __name__ == "__main__":
     with open(nif_erl_file, 'w') as f:
         print(nif_erl_file)
         f.write(nif_erl_template.render(config))
+    nif_suite_erl_file = os.path.join(basepath, '..', 'test', 'pqclean_nif_SUITE.erl')
+    with open(nif_suite_erl_file, 'w') as f:
+        print(nif_suite_erl_file)
+        f.write(nif_suite_erl_template.render(config))
     make_file = os.path.join(c_src_root, 'Makefile')
     with open(make_file, 'w') as f:
         print(make_file)

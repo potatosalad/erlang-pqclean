@@ -1,4 +1,30 @@
 %%% % @format
+%%%-------------------------------------------------------------------
+%%% @author Andrew Bennett <potatosaladx@gmail.com>
+%%% @copyright 2023, Andrew Bennett
+%%% @doc <a href="https://en.wikipedia.org/wiki/Post-quantum_cryptography">Post-Quantum Cryptography</a>
+%%% NIF based on <a href="https://github.com/PQClean/PQClean">PQClean</a> for Erlang and Elixir.
+%%%
+%%% See <a href="readme.html">README</a> for more examples and a full list of supported algorithms.
+%%% 
+%%% <h3><a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm Example:</h3>
+%%% ```
+%%% {PK, SK} = pqclean_nif:kyber768_keypair(),
+%%% {CT, SS} = pqclean_nif:kyber768_encapsulate(PK),
+%%%      SS  = pqclean_nif:kyber768_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% <h3><a href="https://en.wikipedia.org/wiki/Digital_signature">Signature</a> Algorithm Example:</h3>
+%%% ```
+%%% {PK, SK} = pqclean_nif:falcon512_keypair(),
+%%% Msg = <<"message">>,
+%%% Sig = pqclean_nif:falcon512_sign(Msg, SK),
+%%% true = pqclean_nif:falcon512_verify(Sig, Msg, PK).
+%%% '''
+%%% 
+%%% @end
+%%% Created :  15 April 2023 by Andrew Bennett <potatosaladx@gmail.com>
+%%%-------------------------------------------------------------------
 -module(pqclean_nif).
 -compile(warn_missing_spec).
 -author("potatosaladx@gmail.com").
@@ -7,6 +33,25 @@
 
 %% NIF API
 -export([
+    {% for kem in kem_algorithms %}
+    {{ kem.lower_c_name }}_info/0,
+    {{ kem.lower_c_name }}_keypair/0,
+    {{ kem.lower_c_name }}_encapsulate/1,
+    {{ kem.lower_c_name }}_decapsulate/2,
+    {% endfor %}
+    {% for sig in sign_algorithms %}
+    {{ sig.lower_c_name }}_info/0,
+    {{ sig.lower_c_name }}_keypair/0,
+    {% if sig['seedable'] %}
+    {{ sig.lower_c_name }}_keypair/1,
+    {% endif %}
+    {{ sig.lower_c_name }}_sign/2,
+    {{ sig.lower_c_name }}_verify/3{% if not loop.last %},
+    {% endif %}
+    {% endfor %}
+]).
+
+-nifs([
     {% for kem in kem_algorithms %}
     {{ kem.lower_c_name }}_info/0,
     {{ kem.lower_c_name }}_keypair/0,
@@ -39,6 +84,15 @@
     ciphertextbytes := non_neg_integer(),
     sharedsecretbytes := non_neg_integer()
 }.
+%%% Map representation for a <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%% 
+%%% The following functions return this type:
+%%% 
+%%% <ul>
+{% for kem in kem_algorithms %}
+%%%   <li>{@link {{ kem.lower_c_name }}_info/0}</li>
+{% endfor %}
+%%% </ul>
 
 -type crypto_sign_info() :: #{
     type := sign,
@@ -48,6 +102,15 @@
     signaturebytes := non_neg_integer(),
     seedbytes => non_neg_integer()
 }.
+%%% Map representation for a <a href="https://en.wikipedia.org/wiki/Digital_signature">Signature</a> Algorithm.
+%%% 
+%%% The following functions return this type:
+%%% 
+%%% <ul>
+{% for sig in sign_algorithms %}
+%%%   <li>{@link {{ sig.lower_c_name }}_info/0}</li>
+{% endfor %}
+%%% </ul>
 
 -export_type([
     crypto_kem_info/0,
@@ -56,9 +119,13 @@
 
 {% for kem in kem_algorithms %}
 -type {{ kem.lower_c_name }}_secret_key() :: <<_:{{ kem.meta['length-secret-key'] * 8 }}>>.
+%%% Binary representation of a `SecretKey' for the {{ kem.meta['name'] }} KEM Algorithm ({{ "{:,}".format(kem.meta['length-secret-key']) }}-bytes).
 -type {{ kem.lower_c_name }}_public_key() :: <<_:{{ kem.meta['length-public-key'] * 8 }}>>.
+%%% Binary representation of a `PublicKey' for the {{ kem.meta['name'] }} KEM Algorithm ({{ "{:,}".format(kem.meta['length-public-key']) }}-bytes).
 -type {{ kem.lower_c_name }}_cipher_text() :: <<_:{{ kem.meta['length-ciphertext'] * 8 }}>>.
+%%% Binary representation of a `CipherText' for the {{ kem.meta['name'] }} KEM Algorithm ({{ "{:,}".format(kem.meta['length-ciphertext']) }}-bytes).
 -type {{ kem.lower_c_name }}_shared_secret() :: <<_:{{ kem.meta['length-shared-secret'] * 8 }}>>.
+%%% Binary representation of a `SharedSecret' for the {{ kem.meta['name'] }} KEM Algorithm ({{ "{:,}".format(kem.meta['length-shared-secret']) }}-bytes).
 
 -export_type([
     {{ kem.lower_c_name }}_secret_key/0,
@@ -71,12 +138,19 @@
 
 {% for sig in sign_algorithms %}
 -type {{ sig.lower_c_name }}_secret_key() :: <<_:{{ sig.meta['length-secret-key'] * 8 }}>>.
+%%% Binary representation of a `SecretKey' for the {{ sig.meta['name'] }} Signature Algorithm ({{ "{:,}".format(sig.meta['length-secret-key']) }}-bytes).
 -type {{ sig.lower_c_name }}_public_key() :: <<_:{{ sig.meta['length-public-key'] * 8 }}>>.
+%%% Binary representation of a `PublicKey' for the {{ sig.meta['name'] }} Signature Algorithm ({{ "{:,}".format(sig.meta['length-public-key']) }}-bytes).
 {% if sig['seedable'] %}
 -type {{ sig.lower_c_name }}_seed() :: <<_:{{ sig.meta['length-seed'] * 8 }}>>.
+%%% Binary representation of a `Seed' for the {{ sig.meta['name'] }} Signature Algorithm ({{ "{:,}".format(sig.meta['length-seed']) }}-bytes).
 {% endif %}
 -type {{ sig.lower_c_name }}_message() :: binary().
+%%% Binary representation of a `Message' for the {{ sig.meta['name'] }} Signature Algorithm.
 -type {{ sig.lower_c_name }}_signature() :: <<_:{{ sig.meta['length-signature'] * 8 }}>> | binary().
+%%% Binary representation of a `Signature' for the {{ sig.meta['name'] }} Signature Algorithm (maximum of {{ "{:,}".format(sig.meta['length-signature']) }}-bytes).
+-type {{ sig.lower_c_name }}_verification() :: boolean().
+%%% Boolean representation of a `Verification' for the {{ sig.meta['name'] }} Signature Algorithm (`true' if verification was successful, `false' otherwise).
 
 -export_type([
     {{ sig.lower_c_name }}_secret_key/0,
@@ -85,7 +159,8 @@
     {{ sig.lower_c_name }}_seed/0,
     {% endif %}
     {{ sig.lower_c_name }}_message/0,
-    {{ sig.lower_c_name }}_signature/0
+    {{ sig.lower_c_name }}_signature/0,
+    {{ sig.lower_c_name }}_verification/0
 ]).
 
 {% endfor %}
@@ -95,18 +170,87 @@
 %%%=============================================================================
 
 {% for kem in kem_algorithms %}
+%%% @doc
+%%% Returns information about the {{ kem.meta['name'] }}
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%% 
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "{{ kem.meta['name'] }}",
+%%%     secretkeybytes := {{ kem.meta['length-secret-key'] }},
+%%%     publickeybytes := {{ kem.meta['length-public-key'] }},
+%%%     ciphertextbytes := {{ kem.meta['length-ciphertext'] }},
+%%%     sharedsecretbytes := {{ kem.meta['length-shared-secret'] }}
+%%% } = pqclean_nif:{{ kem.lower_c_name }}_info()
+%%% '''
+%%% 
+%%% @see {{ kem.lower_c_name }}_keypair/0
+%%% @see {{ kem.lower_c_name }}_encapsulate/1
+%%% @see {{ kem.lower_c_name }}_decapsulate/2
+%%% @end
 -spec {{ kem.lower_c_name }}_info() -> crypto_kem_info().
 {{ kem.lower_c_name }}_info() ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the {{ kem.meta['name'] }} KEM Algorithm.
+%%% 
+%%% `PublicKey' is a binary of size {{ "{:,}".format(kem.meta['length-public-key']) }}-bytes.
+%%% 
+%%% `SecretKey' is a binary of size {{ "{:,}".format(kem.meta['length-secret-key']) }}-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:{{ kem.lower_c_name }}_keypair().
+%%% '''
+%%% 
+%%% @see {{ kem.lower_c_name }}_encapsulate/1
+%%% @see {{ kem.lower_c_name }}_decapsulate/2
+%%% @end
 -spec {{ kem.lower_c_name }}_keypair() -> {PublicKey, SecretKey} when PublicKey :: {{ kem.lower_c_name }}_public_key(), SecretKey :: {{ kem.lower_c_name }}_secret_key().
 {{ kem.lower_c_name }}_keypair() ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the {{ kem.meta['name'] }} KEM Algorithm.
+%%% 
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%% 
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%% 
+%%% `CipherText' is a binary of size {{ "{:,}".format(kem.meta['length-ciphertext']) }}-bytes.
+%%% 
+%%% `SharedSecret' is a binary of size {{ "{:,}".format(kem.meta['length-shared-secret']) }}-bytes.
+%%% 
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:{{ kem.lower_c_name }}_keypair(),
+%%% {CT, SS} = pqclean_nif:{{ kem.lower_c_name }}_encapsulate(PK).
+%%% '''
+%%% 
+%%% @see {{ kem.lower_c_name }}_decapsulate/2
+%%% @end
 -spec {{ kem.lower_c_name }}_encapsulate(PublicKey) -> {CipherText, SharedSecret} when PublicKey :: {{ kem.lower_c_name }}_public_key(), CipherText :: {{ kem.lower_c_name }}_cipher_text(), SharedSecret :: {{ kem.lower_c_name }}_shared_secret().
 {{ kem.lower_c_name }}_encapsulate(_PublicKey) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the {{ kem.meta['name'] }} KEM Algorithm.
+%%% 
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%% 
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%% 
+%%% `SharedSecret' is a binary of size {{ "{:,}".format(kem.meta['length-shared-secret']) }}-bytes.
+%%% 
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:{{ kem.lower_c_name }}_keypair(),
+%%% {CT, SS} = pqclean_nif:{{ kem.lower_c_name }}_encapsulate(PK),
+%%%      SS  = pqclean_nif:{{ kem.lower_c_name }}_decapsulate(CT, SK).
+%%% '''
+%%% 
+%%% @see {{ kem.lower_c_name }}_encapsulate/1
+%%% @end
 -spec {{ kem.lower_c_name }}_decapsulate(CipherText, SecretKey) -> SharedSecret when CipherText :: {{ kem.lower_c_name }}_cipher_text(), SecretKey :: {{ kem.lower_c_name }}_secret_key(), SharedSecret :: {{ kem.lower_c_name }}_shared_secret().
 {{ kem.lower_c_name }}_decapsulate(_CipherText, _SecretKey) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
@@ -114,25 +258,128 @@
 {% endfor %}
 
 {% for sig in sign_algorithms %}
+%%% @doc
+%%% Returns information about the {{ sig.meta['name'] }}
+%%% <a href="https://en.wikipedia.org/wiki/Digital_signature">Signature</a> Algorithm.
+%%% 
+%%% ```
+%%% #{
+%%%     type := sign,
+%%%     name := "{{ sig.meta['name'] }}",
+%%%     secretkeybytes := {{ sig.meta['length-secret-key'] }},
+%%%     publickeybytes := {{ sig.meta['length-public-key'] }},
+{% if sig['seedable'] %}
+%%%     signaturebytes := {{ sig.meta['length-signature'] }},
+%%%     seedbytes := {{ sig.meta['length-seed'] }}
+{% else %}
+%%%     signaturebytes := {{ sig.meta['length-signature'] }}
+{% endif %}
+%%% } = pqclean_nif:{{ sig.lower_c_name }}_info()
+%%% '''
+%%% 
+%%% @see {{ sig.lower_c_name }}_keypair/0
+{% if sig['seedable'] %}
+%%% @see {{ sig.lower_c_name }}_keypair/1
+{% endif %}
+%%% @see {{ sig.lower_c_name }}_sign/2
+%%% @see {{ sig.lower_c_name }}_verify/3
+%%% @end
 -spec {{ sig.lower_c_name }}_info() -> crypto_sign_info().
 {{ sig.lower_c_name }}_info() ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the {{ sig.meta['name'] }} Signature Algorithm.
+%%% 
+%%% `PublicKey' is a binary of size {{ "{:,}".format(sig.meta['length-public-key']) }}-bytes.
+%%% 
+%%% `SecretKey' is a binary of size {{ "{:,}".format(sig.meta['length-secret-key']) }}-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:{{ sig.lower_c_name }}_keypair().
+%%% '''
+%%% 
+{% if sig['seedable'] %}
+%%% @see {{ sig.lower_c_name }}_keypair/1
+{% endif %}
+%%% @see {{ sig.lower_c_name }}_sign/2
+%%% @see {{ sig.lower_c_name }}_verify/3
+%%% @end
 -spec {{ sig.lower_c_name }}_keypair() -> {PublicKey, SecretKey} when PublicKey :: {{ sig.lower_c_name }}_public_key(), SecretKey :: {{ sig.lower_c_name }}_secret_key().
 {{ sig.lower_c_name }}_keypair() ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
 {% if sig['seedable'] %}
+%%% @doc
+%%% Derives a `PublicKey' and `SecretKey' keypair based on `Seed' for the {{ sig.meta['name'] }} Signature Algorithm.
+%%% 
+%%% `Seed' is a binary of size {{ "{:,}".format(sig.meta['length-seed']) }}-bytes.
+%%% 
+%%% `PublicKey' is a binary of size {{ "{:,}".format(sig.meta['length-public-key']) }}-bytes.
+%%% 
+%%% `SecretKey' is a binary of size {{ "{:,}".format(sig.meta['length-secret-key']) }}-bytes.
+%%% ```
+%%% % WARNING: Example only, NEVER use an all-zero Seed!
+%%% {ZeroPK, ZeroSK} = pqclean_nif:{{ sig.lower_c_name }}_keypair(<<0:({{ sig.meta['length-seed'] }} * 8)>>).
+%%% 
+%%% % Randomly generated Seed:
+%%% Seed = crypto:strong_rand_bytes({{ sig.meta['length-seed'] }}),
+%%% {SeedPK, SeedSK} = pqclean_nif:{{ sig.lower_c_name }}_keypair(Seed).
+%%% '''
+%%% 
+%%% @see {{ sig.lower_c_name }}_keypair/0
+%%% @see {{ sig.lower_c_name }}_sign/2
+%%% @see {{ sig.lower_c_name }}_verify/3
+%%% @end
 -spec {{ sig.lower_c_name }}_keypair(Seed) -> {PublicKey, SecretKey} when Seed :: {{ sig.lower_c_name }}_seed(), PublicKey :: {{ sig.lower_c_name }}_public_key(), SecretKey :: {{ sig.lower_c_name }}_secret_key().
 {{ sig.lower_c_name }}_keypair(_Seed) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 {% endif %}
 
+%%% @doc
+%%% Signs a `Message' with `SecretKey' and returns a `Signature' using the {{ sig.meta['name'] }} Signature Algorithm.
+%%% 
+%%% `Message' is a binary.
+%%% 
+%%% `SecretKey' is a binary of size {{ "{:,}".format(sig.meta['length-secret-key']) }}-bytes generated from `{{ sig.lower_c_name }}_keypair/0'{% if sig['seedable'] %} or `{{ sig.lower_c_name }}_keypair/1'{% endif %}.
+%%% 
+%%% `Signature' is a binary of maximum size {{ "{:,}".format(sig.meta['length-signature']) }}-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:{{ sig.lower_c_name }}_keypair(),
+%%% Msg = <<"message">>,
+%%% Sig = pqclean_nif:{{ sig.lower_c_name }}_sign(Msg, SK).
+%%% '''
+%%% 
+%%% @see {{ sig.lower_c_name }}_verify/3
+%%% @end
 -spec {{ sig.lower_c_name }}_sign(Message, SecretKey) -> Signature when Message :: {{ sig.lower_c_name }}_message(), SecretKey :: {{ sig.lower_c_name }}_secret_key(), Signature :: {{ sig.lower_c_name }}_signature().
 {{ sig.lower_c_name }}_sign(_Message, _SecretKey) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
--spec {{ sig.lower_c_name }}_verify(Signature, Message, PublicKey) -> Signature when Signature :: {{ sig.lower_c_name }}_signature(), Message :: {{ sig.lower_c_name }}_message(), PublicKey :: {{ sig.lower_c_name }}_public_key().
+%%% @doc
+%%% Verifies a `Signature' and `Message' with `PublicKey' and returns a `Verification' using the {{ sig.meta['name'] }} Signature Algorithm.
+%%% 
+%%% `Signature' is a binary of maximum size {{ "{:,}".format(sig.meta['length-signature']) }}-bytes.
+%%% 
+%%% `Message' is a binary.
+%%% 
+%%% `PublicKey' is a binary of size {{ "{:,}".format(sig.meta['length-public-key']) }}-bytes generated from `{{ sig.lower_c_name }}_keypair/0'{% if sig['seedable'] %} or `{{ sig.lower_c_name }}_keypair/1'{% endif %}.
+%%% 
+%%% `Verification' is a boolean (`true' if the `Signature' and `Message' are verified, `false' otherwise).
+%%% 
+%%% ```
+%%% {PK, SK} = pqclean_nif:{{ sig.lower_c_name }}_keypair(),
+%%% Msg = <<"message">>,
+%%% Sig = pqclean_nif:{{ sig.lower_c_name }}_sign(Msg, SK),
+%%% true = pqclean_nif:{{ sig.lower_c_name }}_verify(Sig, Msg, PK).
+%%% 
+%%% % Example of corrupted message:
+%%% BadMsg = <<"messag0">>,
+%%% false = pqclean_nif:{{ sig.lower_c_name }}_verify(Sig, BadMsg, PK).
+%%% '''
+%%% 
+%%% @see {{ sig.lower_c_name }}_sign/2
+%%% @end
+-spec {{ sig.lower_c_name }}_verify(Signature, Message, PublicKey) -> Verification when Signature :: {{ sig.lower_c_name }}_signature(), Message :: {{ sig.lower_c_name }}_message(), PublicKey :: {{ sig.lower_c_name }}_public_key(), Verification :: {{ sig.lower_c_name }}_verification().
 {{ sig.lower_c_name }}_verify(_Signature, _Message, _PublicKey) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 

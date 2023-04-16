@@ -1,5 +1,5 @@
 PROJECT = pqclean
-PROJECT_DESCRIPTION = A new project
+PROJECT_DESCRIPTION = Post-Quantum Cryptography NIF based on PQClean for Erlang and Elixir
 PROJECT_VERSION = 0.0.1
 
 include erlang.mk

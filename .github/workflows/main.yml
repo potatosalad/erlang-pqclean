@@ -1,0 +1,45 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  MIX_ENV: test
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - elixir: 1.14.4
+            otp: 25.3
+            lint: true
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Beam
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      - name: Check Formatting
+        if: ${{ matrix.lint }}
+        run: make erlfmt-check
+
+      - name: Erlang Tests
+        run: |
+          make distclean
+          make erlang-mk
+          make ct
+
+      - name: Logs
+        uses: actions/upload-artifact@v2-preview
+        if: failure()
+        with:
+          name: ct-logs-${{matrix.erlang}}
+          path: logs/*

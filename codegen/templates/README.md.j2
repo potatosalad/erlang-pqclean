@@ -1,6 +1,111 @@
 # pqclean NIF
 
-Work-in-Progress
+[![Build Status](https://github.com/potatosalad/erlang-pqclean/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/potatosalad/erlang-pqclean/actions) [![Hex.pm](https://img.shields.io/hexpm/v/pqclean.svg)](https://hex.pm/packages/pqclean)
+
+[Post-Quantum Cryptography](https://en.wikipedia.org/wiki/Post-quantum_cryptography) NIF based on [PQClean](https://github.com/PQClean/PQClean) for Erlang and Elixir.
+
+See documentation for the `pqclean_nif` module for the full list of types and functions provided.
+
+## Installation
+
+Add `pqclean` to your project's dependencies in `mix.exs`
+
+```elixir
+defp deps do
+  [
+    {:pqclean, "~> 0.0.1"}
+  ]
+end
+```
+
+Add `pqclean` to your project's dependencies in your `Makefile` for [`erlang.mk`](https://github.com/ninenines/erlang.mk) or the following to your `rebar.config`
+
+```erlang
+{deps, [
+    {pqclean, "0.0.1"}
+]}.
+```
+
+## Examples
+
+### [Key Encapsulation Mechanism (KEM)](https://en.wikipedia.org/wiki/Key_encapsulation_mechanism) Algorithm Example
+
+```erlang
+{PK, SK} = pqclean_nif:kyber768_keypair(),
+{CT, SS} = pqclean_nif:kyber768_encapsulate(PK),
+     SS  = pqclean_nif:kyber768_decapsulate(CT, SK).
+```
+
+#### KEM with Encryption Example
+
+```erlang
+% Alice and Bob want to exchange an encrypted messages.
+% Alice wants to send Bob the message "a2b".
+% Bob wants to send Alice the message "b2a".
+
+% Helper functions (encrypt/decrypt with AES-256-GCM):
+Encrypt = fun(K, N, PTxt) ->
+    crypto:crypto_one_time_aead(aes_256_gcm, K, <<N:96>>, PTxt, <<>>, true)
+end,
+Decrypt = fun(K, N, CTxt, CTag) ->
+    crypto:crypto_one_time_aead(aes_256_gcm, K, <<N:96>>, CTxt, <<>>, CTag, false)
+end.
+
+% Alice generates a new ephemeral keypair using Kyber-768:
+{PKa, SKa} = pqclean_nif:kyber768_keypair().
+
+% Alice sends `PKa' to Bob.
+
+% Bob generates a new ephemeral keypair using Kyber-768:
+{PKb, SKb} = pqclean_nif:kyber768_keypair(),
+% Bob encapsulates a shared-secret `SSb2a' against Alice's `PKa' with
+% an ephemeral KEM cipher-text `CTb2a' using Kyber-768:
+{CTb2a, SSb2a} = pqclean_nif:kyber768_encapsulate(PKa),
+% Bob encrypts plain-text `PKb' with shared-secret `SSb2a' and nonce `0'
+% into cipher-text `CTxt_PKb' and cipher-tag `CTag_PKb':
+{CTxt_PKb, CTag_PKb} = Encrypt(SSb2a, 0, PKb),
+% Bob encrypts plain-text "b2a" with shared-secret `SSb2a' and nonce `1'
+% into cipher-text `CTxt_PKb' and cipher-tag `CTag_PKb':
+{CTxt_Mb, CTag_Mb} = Encrypt(SSb2a, 1, <<"b2a">>).
+
+% Bob sends `CTb2a', `CTxt_PKb', `CTag_PKb', `CTxt_Mb', and `CTag_Mb' to Alice.
+
+% Alice decapsulates Bob's `CTb2a' using secret-key `SKa' which
+% results in shared-secret `SSb2a' using Kyber-768:
+SSb2a = pqclean_nif:kyber768_decapsulate(CTb2a, SKa),
+% Alice decrypts `PKb' with shared-secret `SSb2a':
+PKb = Decrypt(SSb2a, 0, CTxt_PKb, CTag_PKb),
+% Alice decrypts Bob's message "b2a" using shared-secret `SSb2a':
+<<"b2a">> = Decrypt(SSb2a, 1, CTxt_Mb, CTag_Mb),
+% Alice encapsulates a shared-secret `SSa2b' against Bob's `PKb' with
+% an ephemeral KEM cipher-text `CTa2b' using Kyber-768:
+{CTa2b, SSa2b} = pqclean_nif:kyber768_encapsulate(PKb),
+% Alice encrypts plain-text "a2b" with shared-secret `SSa2b' and nonce `0'
+% into cipher-text `CTxt_Ma' and cipher-tag `CTag_Ma':
+{CTxt_Ma, CTag_Ma} = Encrypt(SSa2b, 0, <<"a2b">>).
+
+% Alice sends `CTa2b', `CTxt_Ma', and `CTag_Ma' to Bob.
+
+% Bob decapsulates Alice's `CTa2b' using secret-key `SKb' which
+% results in shared-secret `SSa2b' using Kyber-768:
+SSa2b = pqclean_nif:kyber768_decapsulate(CTa2b, SKb),
+% Bob decrypts Alice's message "a2b" using shared-secret `SSa2b':
+<<"a2b">> = Decrypt(SSa2b, 0, CTxt_Ma, CTag_Ma).
+
+% Alice sends Bob a total of 2,291-bytes.
+% Bob sends Alice a total of 2,307-bytes.
+```
+
+See [PQNoise](https://eprint.iacr.org/2022/539.pdf) for more in-depth examples.
+
+### [Signature](https://en.wikipedia.org/wiki/Digital_signature) Algorithm Example
+
+```erlang
+{PK, SK} = pqclean_nif:falcon512_keypair(),
+Msg = <<"message">>,
+Sig = pqclean_nif:falcon512_sign(Msg, SK),
+true = pqclean_nif:falcon512_verify(Sig, Msg, PK).
+```
 
 ## KEM Algorithm Support
 
