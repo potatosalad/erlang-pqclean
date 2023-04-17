@@ -13,7 +13,7 @@ Add `pqclean` to your project's dependencies in `mix.exs`
 ```elixir
 defp deps do
   [
-    {:pqclean, "~> 0.0.1"}
+    {:pqclean, "~> 0.0.2"}
   ]
 end
 ```
@@ -22,7 +22,7 @@ Add `pqclean` to your project's dependencies in your `Makefile` for [`erlang.mk`
 
 ```erlang
 {deps, [
-    {pqclean, "0.0.1"}
+    {pqclean, "0.0.2"}
 ]}.
 ```
 
