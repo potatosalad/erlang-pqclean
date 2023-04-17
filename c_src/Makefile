@@ -80,16 +80,19 @@ else ifeq ($(PLATFORM),darwin)
 	CFLAGS ?= -O2 -g -ggdb -std=c2x -Wall -Wmissing-prototypes
 	CXXFLAGS ?= -O2 -g -ggdb -std=c++20 -Wall
 	LDFLAGS ?= -flat_namespace -undefined suppress
+	LDFLAGS += -lpthread
 else ifeq ($(PLATFORM),freebsd)
 	CC ?= cc
 	CXX ?= c++
 	CFLAGS ?= -O2 -g -ggdb -std=c2x -finline-functions -Wall -Wmissing-prototypes
 	CXXFLAGS ?= -O2 -g -ggdb -std=c++20 -finline-functions -Wall
+	LDFLAGS += -lpthread
 else ifeq ($(PLATFORM),linux)
 	CC ?= gcc
 	CXX ?= g++
 	CFLAGS ?= -O2 -g -ggdb -std=c2x -finline-functions -Wall -Wmissing-prototypes
 	CXXFLAGS ?= -O2 -g -ggdb -std=c++20 -finline-functions -Wall
+	LDFLAGS += -lpthread
 else ifeq ($(PLATFORM),solaris)
 	CC ?= cc
 	CXX ?= c++
@@ -107,16 +110,27 @@ ifneq ($(CROSSCOMPILER),)
 	CXX = $(CROSSCOMPILER)g++
 endif
 
-CFLAGS += -fno-omit-frame-pointer \
+# SANITIZER_FLAGS ?= \
+# 	-fstack-usage \
+# 	-fsanitize=address
+
+CFLAGS += \
+	-fno-omit-frame-pointer \
+	$(SANITIZER_FLAGS) \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
 	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
-CXXFLAGS += -fno-omit-frame-pointer \
+CXXFLAGS += \
+	-fno-omit-frame-pointer \
+	$(SANITIZER_FLAGS) \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
 	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 
-LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)"
+LDLIBS += \
+	-fno-omit-frame-pointer \
+	$(SANITIZER_FLAGS) \
+	-L"$(ERL_INTERFACE_LIB_DIR)"
 
 # LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" \
 # 	-L"$(dir $(PQCLEAN_COMMON_OUTPUT))" -lpqclean_common \
@@ -129,6 +143,16 @@ LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)"
 # 	# # 	-L"$(dir $(PQCLEAN_KYBER76890S_CLEAN_OUTPUT))" -lkyber768-90s_clean \
 # 	# # 	-L"$(dir $(PQCLEAN_KYBER1024_CLEAN_OUTPUT))" -lkyber1024_clean \
 # 	# # 	-L"$(dir $(PQCLEAN_KYBER102490S_CLEAN_OUTPUT))" -lkyber1024-90s_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT))" -lmceliece348864_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT))" -lmceliece348864f_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT))" -lmceliece460896_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT))" -lmceliece460896f_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT))" -lmceliece6688128_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT))" -lmceliece6688128f_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT))" -lmceliece6960119_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT))" -lmceliece6960119f_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT))" -lmceliece8192128_clean \
+# 	# # 	-L"$(dir $(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT))" -lmceliece8192128f_clean \
 # 	# # 	-L"$(dir $(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT))" -ldilithium2_clean \
 # 	# # 	-L"$(dir $(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT))" -ldilithium2aes_clean \
 # 	# # 	-L"$(dir $(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT))" -ldilithium3_clean \
@@ -190,6 +214,16 @@ PQCLEAN_MAKE_FILE ?= $(PQCLEAN_SRC_DIR)/Makefile
 # # PQCLEAN_KYBER76890S_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/libkyber768-90s_clean.a
 # # PQCLEAN_KYBER1024_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/libkyber1024_clean.a
 # # PQCLEAN_KYBER102490S_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/libkyber1024-90s_clean.a
+# # PQCLEAN_MCELIECE348864_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/libmceliece348864_clean.a
+# # PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/libmceliece348864f_clean.a
+# # PQCLEAN_MCELIECE460896_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/libmceliece460896_clean.a
+# # PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/libmceliece460896f_clean.a
+# # PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/libmceliece6688128_clean.a
+# # PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/libmceliece6688128f_clean.a
+# # PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/libmceliece6960119_clean.a
+# # PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/libmceliece6960119f_clean.a
+# # PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/libmceliece8192128_clean.a
+# # PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/libmceliece8192128f_clean.a
 # # PQCLEAN_DILITHIUM2_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/libdilithium2_clean.a
 # # PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/libdilithium2aes_clean.a
 # # PQCLEAN_DILITHIUM3_CLEAN_OUTPUT ?= $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/libdilithium3_clean.a
@@ -246,6 +280,16 @@ PQCLEAN_MAKE_FILE ?= $(PQCLEAN_SRC_DIR)/Makefile
 # 	# # 	$(PQCLEAN_KYBER76890S_CLEAN_OUTPUT) \
 # 	# # 	$(PQCLEAN_KYBER1024_CLEAN_OUTPUT) \
 # 	# # 	$(PQCLEAN_KYBER102490S_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT) \
+# 	# # 	$(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT) \
 # 	# # 	$(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT) \
 # 	# # 	$(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT) \
 # 	# # 	$(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT) \
@@ -540,6 +584,226 @@ PQCLEAN_KYBER102490S_CLEAN_OUTPUT_OBJECTS = \
 # 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_KYBER102490S_CLEAN_OUTPUT_OBJECTS)
 
 # $(PQCLEAN_KYBER102490S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE348864_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean/util.o
+
+# $(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean/util.o
+
+# $(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE460896_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean/util.o
+
+# $(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean/util.o
+
+# $(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean/util.o
+
+# $(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean/util.o
+
+# $(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean/util.o
+
+# $(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean/util.o
+
+# $(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean/util.o
+
+# $(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/benes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/bm.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/controlbits.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/decrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/encrypt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/operations.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/pk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/root.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/sk_gen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/synd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/transpose.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean/util.o
+
+# $(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT): $(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
 # 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
 PQCLEAN_DILITHIUM2_CLEAN_OUTPUT_OBJECTS = \
@@ -1383,6 +1647,16 @@ DEPS_OBJECTS = \
 	$(PQCLEAN_KYBER76890S_CLEAN_OUTPUT_OBJECTS) \
 	$(PQCLEAN_KYBER1024_CLEAN_OUTPUT_OBJECTS) \
 	$(PQCLEAN_KYBER102490S_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE348864_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE348864F_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE460896_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE460896F_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE6688128_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE6688128F_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE6960119_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE6960119F_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE8192128_CLEAN_OUTPUT_OBJECTS) \
+	$(PQCLEAN_MCELIECE8192128F_CLEAN_OUTPUT_OBJECTS) \
 	$(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT_OBJECTS) \
 	$(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT_OBJECTS) \
 	$(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT_OBJECTS) \
@@ -1428,7 +1702,7 @@ DEPS_OBJECTS = \
 	$(PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT_OBJECTS) \
 	$(PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
 
-$(DEPS_OBJECTS): $(PQCLEAN_SRC_DIR)
+$(DEPS_OBJECTS): $(MAKEFILE_LIST) $(C_SRC_ENV) $(PQCLEAN_SRC_DIR)
 
 $(C_SRC_OUTPUT_FILE): $(DEPS_OBJECTS) $(OBJECTS)
 	$(verbose) mkdir -p $(dir $@)
@@ -1456,62 +1730,73 @@ clean-c_src:
 	$(gen_verbose) rm -f $(C_SRC_OUTPUT_FILE) $(OBJECTS)
 
 clean-deps:
-	$(gen_verbose) rm -f $(PQCLEAN_COMMON_OUTPUT)
-	$(gen_verbose) rm -f $(PQCLEAN_COMMON_OBJECTS)
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean clean
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean clean
+	$(gen_verbose) rm -f $(DEPS_OBJECTS)
 
+# $(gen_verbose) rm -f $(PQCLEAN_COMMON_OUTPUT)
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece348864f/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece460896f/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6688128f/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece6960119f/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_kem/mceliece8192128f/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean clean
+# # $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean clean
+# 
 distclean:: distclean-c_src-env
 
 distclean-c_src-env:

@@ -13,7 +13,7 @@ Add `pqclean` to your project's dependencies in `mix.exs`
 ```elixir
 defp deps do
   [
-    {:pqclean, "~> 0.0.2"}
+    {:pqclean, "~> 0.0.3"}
   ]
 end
 ```
@@ -22,7 +22,7 @@ Add `pqclean` to your project's dependencies in your `Makefile` for [`erlang.mk`
 
 ```erlang
 {deps, [
-    {pqclean, "0.0.2"}
+    {pqclean, "0.0.3"}
 ]}.
 ```
 
@@ -120,19 +120,58 @@ true = pqclean_nif:falcon512_verify(Sig, Msg, PK).
 | `Kyber768-90s` | 3 | 1,184 | 2,400 | 1,088 | 32 |
 | `Kyber1024` | 5 | 1,568 | 3,168 | 1,568 | 32 |
 | `Kyber1024-90s` | 5 | 1,568 | 3,168 | 1,568 | 32 |
+| `Classic McEliece 348864`† | 1 | 261,120 | 6,452 | 128 | 32 |
+| `Classic McEliece 348864f`† | 1 | 261,120 | 6,452 | 128 | 32 |
+| `Classic McEliece 460896`† | 3 | 524,160 | 13,568 | 188 | 32 |
+| `Classic McEliece 460896f`† | 3 | 524,160 | 13,568 | 188 | 32 |
+| `Classic McEliece 6688128`† | 5 | 1,044,992 | 13,892 | 240 | 32 |
+| `Classic McEliece 6688128`† | 5 | 1,044,992 | 13,892 | 240 | 32 |
+| `Classic McEliece 6960119`† | 5 | 1,047,319 | 13,908 | 226 | 32 |
+| `Classic McEliece 6960119f`† | 5 | 1,047,319 | 13,908 | 226 | 32 |
+| `Classic McEliece 8192128`† | 5 | 1,357,824 | 14,080 | 240 | 32 |
+| `Classic McEliece 8192128f`† | 5 | 1,357,824 | 14,080 | 240 | 32 |
+
+**WARNING:** Algorithms marked with a dagger (†) require a large stack for key generation.  See below for more information.
+
+### Large Stack Support
+
+When generating keys for "large stack" algorithms, an exception will be raised if the detected stack size is below 8MB:
+
+```erl
+1> try pqclean_nif:mceliece348864_keypair() catch error:{badarg, {_File, _Line}, Reason} -> Reason end.
+"Key generation for Classic McEliece 348864 requires a large stack (>= 8MB): "
+"please restart the BEAM with `erl +sssdcpu 1024` on 64-bit machines "
+"(or `erl +sssdcpu 2048` on 32-bit machines); current setting is `erl +sssdcpu 41`"
+```
+
+Restarting the BEAM with `erl +sssdcpu 1024` on 64-bit systems will allow key generation for these algorithms to be supported.
+
+_NOTE:_ If using an `escript`, `rebar3`, `elixir`, etc: it may be simpler to use the environment variable `ERL_AFLAGS="+sssdcpu 1024"` instead.
+
+```bash
+$ erl +sssdcpu 1024
+```
+
+```erl
+1> {PK, SK} = pqclean_nif:mceliece348864_keypair().
+{<<38,72,183,62,48,9,8,23,83,149,228,233,255,143,120,71,
+   113,143,14,95,28,157,43,73,51,99,6,79,...>>,
+ <<116,53,239,220,26,165,236,199,7,246,124,172,167,182,
+   154,60,152,213,9,243,206,191,24,129,129,73,132,...>>}
+```
 
 ## Signature Algorithm Support
 
 | Signature Algorithm | NIST Level | Public Key | Secret Key | Signature | Seed |
 | ------------------- | ----------:| ----------:| ----------:| ---------:| ----:|
-| `Dilithium2` | 2 | 1,312 | 2,528 | 2,420 | &mdash; |
-| `Dilithium2-AES` | 2 | 1,312 | 2,528 | 2,420 | &mdash; |
-| `Dilithium3` | 3 | 1,952 | 4,000 | 3,293 | &mdash; |
-| `Dilithium3-AES` | 3 | 1,952 | 4,000 | 3,293 | &mdash; |
-| `Dilithium5` | 5 | 2,592 | 4,864 | 4,595 | &mdash; |
-| `Dilithium5-AES` | 5 | 2,592 | 4,864 | 4,595 | &mdash; |
-| `Falcon-512` | 1 | 897 | 1,281 | 666 | &mdash; |
-| `Falcon-1024` | 5 | 1,793 | 2,305 | 1,280 | &mdash; |
+| `Dilithium2` | 2 | 1,312 | 2,528 | 2,420 | — |
+| `Dilithium2-AES` | 2 | 1,312 | 2,528 | 2,420 | — |
+| `Dilithium3` | 3 | 1,952 | 4,000 | 3,293 | — |
+| `Dilithium3-AES` | 3 | 1,952 | 4,000 | 3,293 | — |
+| `Dilithium5` | 5 | 2,592 | 4,864 | 4,595 | — |
+| `Dilithium5-AES` | 5 | 2,592 | 4,864 | 4,595 | — |
+| `Falcon-512` | 1 | 897 | 1,281 | 666 | — |
+| `Falcon-1024` | 5 | 1,793 | 2,305 | 1,280 | — |
 | `SPHINCS+-haraka-128f-robust` | 1 | 32 | 64 | 17,088 | 48 |
 | `SPHINCS+-haraka-128f-simple` | 1 | 32 | 64 | 17,088 | 48 |
 | `SPHINCS+-haraka-128s-robust` | 1 | 32 | 64 | 7,856 | 48 |

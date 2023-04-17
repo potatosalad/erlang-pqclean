@@ -33,6 +33,7 @@
 
 %% NIF API
 -export([
+    dirty_job_cpu_stack_size/0,
     {% for kem in kem_algorithms %}
     {{ kem.lower_c_name }}_info/0,
     {{ kem.lower_c_name }}_keypair/0,
@@ -52,6 +53,7 @@
 ]).
 
 -nifs([
+    dirty_job_cpu_stack_size/0,
     {% for kem in kem_algorithms %}
     {{ kem.lower_c_name }}_info/0,
     {{ kem.lower_c_name }}_keypair/0,
@@ -169,6 +171,13 @@
 %%% NIF API functions
 %%%=============================================================================
 
+%%% @doc
+%%% Returns the number of bytes of the stack size currently set for the Dirty Job CPU Thread.
+%%% @end
+-spec dirty_job_cpu_stack_size() -> StackSize :: non_neg_integer().
+dirty_job_cpu_stack_size() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
 {% for kem in kem_algorithms %}
 %%% @doc
 %%% Returns information about the {{ kem.meta['name'] }}
@@ -202,6 +211,12 @@
 %%% ```
 %%% {PK, SK} = pqclean_nif:{{ kem.lower_c_name }}_keypair().
 %%% '''
+%%% 
+{% if kem['large_stack'] %}
+%%% <strong>WARNING:</strong> {{ kem.meta['name'] }} requires a large stack (>= 8MB).
+%%% 
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+{% endif %}
 %%% 
 %%% @see {{ kem.lower_c_name }}_encapsulate/1
 %%% @see {{ kem.lower_c_name }}_decapsulate/2

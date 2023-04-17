@@ -1,6 +1,6 @@
 {application, pqclean, [
 	{description, "Post-Quantum Cryptography NIF based on PQClean for Erlang and Elixir"},
-	{vsn, "0.0.2"},
+	{vsn, "0.0.3"},
 	{id, "git"},
 	{registered, []},
 	{applications, [

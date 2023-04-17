@@ -63,76 +63,86 @@ kem_algorithms:
     src: crypto_kem/kyber1024-90s/clean
     headers:
       - <crypto_kem/kyber1024-90s/clean/api.h>
-  # - lower_c_name: mceliece348864
-  #   upper_c_name: MCELIECE348864
-  #   pqclean_prefix: PQCLEAN_MCELIECE348864_CLEAN
-  #   libname: mceliece348864_clean
-  #   src: crypto_kem/mceliece348864/clean
-  #   headers:
-  #     - <crypto_kem/mceliece348864f/clean/api.h>
-  # - lower_c_name: mceliece348864f
-  #   upper_c_name: MCELIECE348864F
-  #   pqclean_prefix: PQCLEAN_MCELIECE348864F_CLEAN
-  #   libname: mceliece348864f_clean
-  #   src: crypto_kem/mceliece348864f/clean
-  #   headers:
-  #     - <crypto_kem/mceliece348864f/clean/api.h>
-  # - lower_c_name: mceliece460896
-  #   upper_c_name: MCELIECE460896
-  #   pqclean_prefix: PQCLEAN_MCELIECE460896_CLEAN
-  #   libname: mceliece460896_clean
-  #   src: crypto_kem/mceliece460896/clean
-  #   headers:
-  #     - <crypto_kem/mceliece460896f/clean/api.h>
-  # - lower_c_name: mceliece460896f
-  #   upper_c_name: MCELIECE460896F
-  #   pqclean_prefix: PQCLEAN_MCELIECE460896F_CLEAN
-  #   libname: mceliece460896f_clean
-  #   src: crypto_kem/mceliece460896f/clean
-  #   headers:
-  #     - <crypto_kem/mceliece460896f/clean/api.h>
-  # - lower_c_name: mceliece6688128
-  #   upper_c_name: MCELIECE6688128
-  #   pqclean_prefix: PQCLEAN_MCELIECE6688128_CLEAN
-  #   libname: mceliece6688128_clean
-  #   src: crypto_kem/mceliece6688128/clean
-  #   headers:
-  #     - <crypto_kem/mceliece6688128f/clean/api.h>
-  # - lower_c_name: mceliece6688128f
-  #   upper_c_name: MCELIECE6688128F
-  #   pqclean_prefix: PQCLEAN_MCELIECE6688128F_CLEAN
-  #   libname: mceliece6688128f_clean
-  #   src: crypto_kem/mceliece6688128f/clean
-  #   headers:
-  #     - <crypto_kem/mceliece6688128f/clean/api.h>
-  # - lower_c_name: mceliece6960119
-  #   upper_c_name: MCELIECE6960119
-  #   pqclean_prefix: PQCLEAN_MCELIECE6960119_CLEAN
-  #   libname: mceliece6960119_clean
-  #   src: crypto_kem/mceliece6960119/clean
-  #   headers:
-  #     - <crypto_kem/mceliece6960119f/clean/api.h>
-  # - lower_c_name: mceliece6960119f
-  #   upper_c_name: MCELIECE6960119F
-  #   pqclean_prefix: PQCLEAN_MCELIECE6960119F_CLEAN
-  #   libname: mceliece6960119f_clean
-  #   src: crypto_kem/mceliece6960119f/clean
-  #   headers:
-  #     - <crypto_kem/mceliece6960119f/clean/api.h>
-  # - lower_c_name: mceliece8192128
-  #   upper_c_name: MCELIECE8192128
-  #   pqclean_prefix: PQCLEAN_MCELIECE8192128_CLEAN
-  #   libname: mceliece8192128_clean
-  #   src: crypto_kem/mceliece8192128/clean
-  #   headers:
-  #     - <crypto_kem/mceliece8192128f/clean/api.h>
-  # - lower_c_name: mceliece8192128f
-  #   upper_c_name: MCELIECE8192128F
-  #   pqclean_prefix: PQCLEAN_MCELIECE8192128F_CLEAN
-  #   libname: mceliece8192128f_clean
-  #   src: crypto_kem/mceliece8192128f/clean
-  #   headers:
-  #     - <crypto_kem/mceliece8192128f/clean/api.h>
+  - lower_c_name: mceliece348864
+    upper_c_name: MCELIECE348864
+    pqclean_prefix: PQCLEAN_MCELIECE348864_CLEAN
+    large_stack: true
+    libname: mceliece348864_clean
+    src: crypto_kem/mceliece348864/clean
+    headers:
+      - <crypto_kem/mceliece348864/clean/api.h>
+  - lower_c_name: mceliece348864f
+    upper_c_name: MCELIECE348864F
+    pqclean_prefix: PQCLEAN_MCELIECE348864F_CLEAN
+    large_stack: true
+    libname: mceliece348864f_clean
+    src: crypto_kem/mceliece348864f/clean
+    headers:
+      - <crypto_kem/mceliece348864f/clean/api.h>
+  - lower_c_name: mceliece460896
+    upper_c_name: MCELIECE460896
+    pqclean_prefix: PQCLEAN_MCELIECE460896_CLEAN
+    large_stack: true
+    libname: mceliece460896_clean
+    src: crypto_kem/mceliece460896/clean
+    headers:
+      - <crypto_kem/mceliece460896/clean/api.h>
+  - lower_c_name: mceliece460896f
+    upper_c_name: MCELIECE460896F
+    pqclean_prefix: PQCLEAN_MCELIECE460896F_CLEAN
+    large_stack: true
+    libname: mceliece460896f_clean
+    src: crypto_kem/mceliece460896f/clean
+    headers:
+      - <crypto_kem/mceliece460896f/clean/api.h>
+  - lower_c_name: mceliece6688128
+    upper_c_name: MCELIECE6688128
+    pqclean_prefix: PQCLEAN_MCELIECE6688128_CLEAN
+    large_stack: true
+    libname: mceliece6688128_clean
+    src: crypto_kem/mceliece6688128/clean
+    headers:
+      - <crypto_kem/mceliece6688128/clean/api.h>
+  - lower_c_name: mceliece6688128f
+    upper_c_name: MCELIECE6688128F
+    pqclean_prefix: PQCLEAN_MCELIECE6688128F_CLEAN
+    large_stack: true
+    libname: mceliece6688128f_clean
+    src: crypto_kem/mceliece6688128f/clean
+    headers:
+      - <crypto_kem/mceliece6688128f/clean/api.h>
+  - lower_c_name: mceliece6960119
+    upper_c_name: MCELIECE6960119
+    pqclean_prefix: PQCLEAN_MCELIECE6960119_CLEAN
+    large_stack: true
+    libname: mceliece6960119_clean
+    src: crypto_kem/mceliece6960119/clean
+    headers:
+      - <crypto_kem/mceliece6960119/clean/api.h>
+  - lower_c_name: mceliece6960119f
+    upper_c_name: MCELIECE6960119F
+    pqclean_prefix: PQCLEAN_MCELIECE6960119F_CLEAN
+    large_stack: true
+    libname: mceliece6960119f_clean
+    src: crypto_kem/mceliece6960119f/clean
+    headers:
+      - <crypto_kem/mceliece6960119f/clean/api.h>
+  - lower_c_name: mceliece8192128
+    upper_c_name: MCELIECE8192128
+    pqclean_prefix: PQCLEAN_MCELIECE8192128_CLEAN
+    large_stack: true
+    libname: mceliece8192128_clean
+    src: crypto_kem/mceliece8192128/clean
+    headers:
+      - <crypto_kem/mceliece8192128/clean/api.h>
+  - lower_c_name: mceliece8192128f
+    upper_c_name: MCELIECE8192128F
+    pqclean_prefix: PQCLEAN_MCELIECE8192128F_CLEAN
+    large_stack: true
+    libname: mceliece8192128f_clean
+    src: crypto_kem/mceliece8192128f/clean
+    headers:
+      - <crypto_kem/mceliece8192128f/clean/api.h>
 sign_algorithms:
   - lower_c_name: dilithium2
     upper_c_name: dilithium2

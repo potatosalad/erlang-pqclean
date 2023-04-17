@@ -80,16 +80,19 @@ else ifeq ($(PLATFORM),darwin)
 	CFLAGS ?= -O2 -g -ggdb -std=c2x -Wall -Wmissing-prototypes
 	CXXFLAGS ?= -O2 -g -ggdb -std=c++20 -Wall
 	LDFLAGS ?= -flat_namespace -undefined suppress
+	LDFLAGS += -lpthread
 else ifeq ($(PLATFORM),freebsd)
 	CC ?= cc
 	CXX ?= c++
 	CFLAGS ?= -O2 -g -ggdb -std=c2x -finline-functions -Wall -Wmissing-prototypes
 	CXXFLAGS ?= -O2 -g -ggdb -std=c++20 -finline-functions -Wall
+	LDFLAGS += -lpthread
 else ifeq ($(PLATFORM),linux)
 	CC ?= gcc
 	CXX ?= g++
 	CFLAGS ?= -O2 -g -ggdb -std=c2x -finline-functions -Wall -Wmissing-prototypes
 	CXXFLAGS ?= -O2 -g -ggdb -std=c++20 -finline-functions -Wall
+	LDFLAGS += -lpthread
 else ifeq ($(PLATFORM),solaris)
 	CC ?= cc
 	CXX ?= c++
@@ -107,16 +110,27 @@ ifneq ($(CROSSCOMPILER),)
 	CXX = $(CROSSCOMPILER)g++
 endif
 
-CFLAGS += -fno-omit-frame-pointer \
+# SANITIZER_FLAGS ?= \
+# 	-fstack-usage \
+# 	-fsanitize=address
+
+CFLAGS += \
+	-fno-omit-frame-pointer \
+	$(SANITIZER_FLAGS) \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
 	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
-CXXFLAGS += -fno-omit-frame-pointer \
+CXXFLAGS += \
+	-fno-omit-frame-pointer \
+	$(SANITIZER_FLAGS) \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
 	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 
-LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)"
+LDLIBS += \
+	-fno-omit-frame-pointer \
+	$(SANITIZER_FLAGS) \
+	-L"$(ERL_INTERFACE_LIB_DIR)"
 
 # LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" \
 # 	-L"$(dir $(PQCLEAN_COMMON_OUTPUT))" -lpqclean_common \
@@ -262,7 +276,7 @@ DEPS_OBJECTS = \
 
 	{% endfor %}
 
-$(DEPS_OBJECTS): $(PQCLEAN_SRC_DIR)
+$(DEPS_OBJECTS): $(MAKEFILE_LIST) $(C_SRC_ENV) $(PQCLEAN_SRC_DIR)
 
 $(C_SRC_OUTPUT_FILE): $(DEPS_OBJECTS) $(OBJECTS)
 	$(verbose) mkdir -p $(dir $@)
@@ -290,11 +304,12 @@ clean-c_src:
 	$(gen_verbose) rm -f $(C_SRC_OUTPUT_FILE) $(OBJECTS)
 
 clean-deps:
-	$(gen_verbose) rm -f $(PQCLEAN_COMMON_OUTPUT)
-	$(gen_verbose) rm -f $(PQCLEAN_COMMON_OBJECTS)
-	{% for make_output in make_outputs %}
-	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/{{ make_output.src }} clean
-	{% endfor %}
+	$(gen_verbose) rm -f $(DEPS_OBJECTS)
+
+# $(gen_verbose) rm -f $(PQCLEAN_COMMON_OUTPUT)
+# {% for make_output in make_outputs %}
+# $(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/{{ make_output.src }} clean
+# {% endfor %}
 
 distclean:: distclean-c_src-env
 

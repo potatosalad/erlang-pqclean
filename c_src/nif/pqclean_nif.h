@@ -74,6 +74,10 @@ extern pqclean_nif_atom_table_t *pqclean_nif_atom_table;
 #define EXCP_ERROR(Env, Str) EXCP((Env), ATOM(error), (Str))
 #define EXCP_ERROR_F(Env, Fmt, ...) EXCP_F((Env), ATOM(error), Fmt, __VA_ARGS__)
 
+/* Global Function Declarations */
+
+extern int _pqclean_nif_get_thread_stack_size(size_t *stack_sizep, ErlNifEnv *env, ERL_NIF_TERM *error_term);
+
 #ifdef __cplusplus
 }
 #endif

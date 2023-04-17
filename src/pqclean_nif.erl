@@ -33,6 +33,7 @@
 
 %% NIF API
 -export([
+    dirty_job_cpu_stack_size/0,
     hqc_rmrs_128_info/0,
     hqc_rmrs_128_keypair/0,
     hqc_rmrs_128_encapsulate/1,
@@ -69,6 +70,46 @@
     kyber1024_90s_keypair/0,
     kyber1024_90s_encapsulate/1,
     kyber1024_90s_decapsulate/2,
+    mceliece348864_info/0,
+    mceliece348864_keypair/0,
+    mceliece348864_encapsulate/1,
+    mceliece348864_decapsulate/2,
+    mceliece348864f_info/0,
+    mceliece348864f_keypair/0,
+    mceliece348864f_encapsulate/1,
+    mceliece348864f_decapsulate/2,
+    mceliece460896_info/0,
+    mceliece460896_keypair/0,
+    mceliece460896_encapsulate/1,
+    mceliece460896_decapsulate/2,
+    mceliece460896f_info/0,
+    mceliece460896f_keypair/0,
+    mceliece460896f_encapsulate/1,
+    mceliece460896f_decapsulate/2,
+    mceliece6688128_info/0,
+    mceliece6688128_keypair/0,
+    mceliece6688128_encapsulate/1,
+    mceliece6688128_decapsulate/2,
+    mceliece6688128f_info/0,
+    mceliece6688128f_keypair/0,
+    mceliece6688128f_encapsulate/1,
+    mceliece6688128f_decapsulate/2,
+    mceliece6960119_info/0,
+    mceliece6960119_keypair/0,
+    mceliece6960119_encapsulate/1,
+    mceliece6960119_decapsulate/2,
+    mceliece6960119f_info/0,
+    mceliece6960119f_keypair/0,
+    mceliece6960119f_encapsulate/1,
+    mceliece6960119f_decapsulate/2,
+    mceliece8192128_info/0,
+    mceliece8192128_keypair/0,
+    mceliece8192128_encapsulate/1,
+    mceliece8192128_decapsulate/2,
+    mceliece8192128f_info/0,
+    mceliece8192128f_keypair/0,
+    mceliece8192128f_encapsulate/1,
+    mceliece8192128f_decapsulate/2,
     dilithium2_info/0,
     dilithium2_keypair/0,
     dilithium2_sign/2,
@@ -284,6 +325,7 @@
 ]).
 
 -nifs([
+    dirty_job_cpu_stack_size/0,
     hqc_rmrs_128_info/0,
     hqc_rmrs_128_keypair/0,
     hqc_rmrs_128_encapsulate/1,
@@ -320,6 +362,46 @@
     kyber1024_90s_keypair/0,
     kyber1024_90s_encapsulate/1,
     kyber1024_90s_decapsulate/2,
+    mceliece348864_info/0,
+    mceliece348864_keypair/0,
+    mceliece348864_encapsulate/1,
+    mceliece348864_decapsulate/2,
+    mceliece348864f_info/0,
+    mceliece348864f_keypair/0,
+    mceliece348864f_encapsulate/1,
+    mceliece348864f_decapsulate/2,
+    mceliece460896_info/0,
+    mceliece460896_keypair/0,
+    mceliece460896_encapsulate/1,
+    mceliece460896_decapsulate/2,
+    mceliece460896f_info/0,
+    mceliece460896f_keypair/0,
+    mceliece460896f_encapsulate/1,
+    mceliece460896f_decapsulate/2,
+    mceliece6688128_info/0,
+    mceliece6688128_keypair/0,
+    mceliece6688128_encapsulate/1,
+    mceliece6688128_decapsulate/2,
+    mceliece6688128f_info/0,
+    mceliece6688128f_keypair/0,
+    mceliece6688128f_encapsulate/1,
+    mceliece6688128f_decapsulate/2,
+    mceliece6960119_info/0,
+    mceliece6960119_keypair/0,
+    mceliece6960119_encapsulate/1,
+    mceliece6960119_decapsulate/2,
+    mceliece6960119f_info/0,
+    mceliece6960119f_keypair/0,
+    mceliece6960119f_encapsulate/1,
+    mceliece6960119f_decapsulate/2,
+    mceliece8192128_info/0,
+    mceliece8192128_keypair/0,
+    mceliece8192128_encapsulate/1,
+    mceliece8192128_decapsulate/2,
+    mceliece8192128f_info/0,
+    mceliece8192128f_keypair/0,
+    mceliece8192128f_encapsulate/1,
+    mceliece8192128f_decapsulate/2,
     dilithium2_info/0,
     dilithium2_keypair/0,
     dilithium2_sign/2,
@@ -562,6 +644,16 @@
 %%%   <li>{@link kyber768_90s_info/0}</li>
 %%%   <li>{@link kyber1024_info/0}</li>
 %%%   <li>{@link kyber1024_90s_info/0}</li>
+%%%   <li>{@link mceliece348864_info/0}</li>
+%%%   <li>{@link mceliece348864f_info/0}</li>
+%%%   <li>{@link mceliece460896_info/0}</li>
+%%%   <li>{@link mceliece460896f_info/0}</li>
+%%%   <li>{@link mceliece6688128_info/0}</li>
+%%%   <li>{@link mceliece6688128f_info/0}</li>
+%%%   <li>{@link mceliece6960119_info/0}</li>
+%%%   <li>{@link mceliece6960119f_info/0}</li>
+%%%   <li>{@link mceliece8192128_info/0}</li>
+%%%   <li>{@link mceliece8192128f_info/0}</li>
 %%% </ul>
 
 -type crypto_sign_info() :: #{
@@ -770,6 +862,166 @@
     kyber1024_90s_public_key/0,
     kyber1024_90s_cipher_text/0,
     kyber1024_90s_shared_secret/0
+]).
+
+-type mceliece348864_secret_key() :: <<_:51616>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 348864 KEM Algorithm (6,452-bytes).
+-type mceliece348864_public_key() :: <<_:2088960>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 348864 KEM Algorithm (261,120-bytes).
+-type mceliece348864_cipher_text() :: <<_:1024>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 348864 KEM Algorithm (128-bytes).
+-type mceliece348864_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 348864 KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece348864_secret_key/0,
+    mceliece348864_public_key/0,
+    mceliece348864_cipher_text/0,
+    mceliece348864_shared_secret/0
+]).
+
+-type mceliece348864f_secret_key() :: <<_:51616>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 348864f KEM Algorithm (6,452-bytes).
+-type mceliece348864f_public_key() :: <<_:2088960>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 348864f KEM Algorithm (261,120-bytes).
+-type mceliece348864f_cipher_text() :: <<_:1024>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 348864f KEM Algorithm (128-bytes).
+-type mceliece348864f_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 348864f KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece348864f_secret_key/0,
+    mceliece348864f_public_key/0,
+    mceliece348864f_cipher_text/0,
+    mceliece348864f_shared_secret/0
+]).
+
+-type mceliece460896_secret_key() :: <<_:108544>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 460896 KEM Algorithm (13,568-bytes).
+-type mceliece460896_public_key() :: <<_:4193280>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 460896 KEM Algorithm (524,160-bytes).
+-type mceliece460896_cipher_text() :: <<_:1504>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 460896 KEM Algorithm (188-bytes).
+-type mceliece460896_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 460896 KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece460896_secret_key/0,
+    mceliece460896_public_key/0,
+    mceliece460896_cipher_text/0,
+    mceliece460896_shared_secret/0
+]).
+
+-type mceliece460896f_secret_key() :: <<_:108544>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 460896f KEM Algorithm (13,568-bytes).
+-type mceliece460896f_public_key() :: <<_:4193280>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 460896f KEM Algorithm (524,160-bytes).
+-type mceliece460896f_cipher_text() :: <<_:1504>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 460896f KEM Algorithm (188-bytes).
+-type mceliece460896f_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 460896f KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece460896f_secret_key/0,
+    mceliece460896f_public_key/0,
+    mceliece460896f_cipher_text/0,
+    mceliece460896f_shared_secret/0
+]).
+
+-type mceliece6688128_secret_key() :: <<_:111136>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 6688128 KEM Algorithm (13,892-bytes).
+-type mceliece6688128_public_key() :: <<_:8359936>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 6688128 KEM Algorithm (1,044,992-bytes).
+-type mceliece6688128_cipher_text() :: <<_:1920>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 6688128 KEM Algorithm (240-bytes).
+-type mceliece6688128_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 6688128 KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece6688128_secret_key/0,
+    mceliece6688128_public_key/0,
+    mceliece6688128_cipher_text/0,
+    mceliece6688128_shared_secret/0
+]).
+
+-type mceliece6688128f_secret_key() :: <<_:111136>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 6688128 KEM Algorithm (13,892-bytes).
+-type mceliece6688128f_public_key() :: <<_:8359936>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 6688128 KEM Algorithm (1,044,992-bytes).
+-type mceliece6688128f_cipher_text() :: <<_:1920>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 6688128 KEM Algorithm (240-bytes).
+-type mceliece6688128f_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 6688128 KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece6688128f_secret_key/0,
+    mceliece6688128f_public_key/0,
+    mceliece6688128f_cipher_text/0,
+    mceliece6688128f_shared_secret/0
+]).
+
+-type mceliece6960119_secret_key() :: <<_:111264>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 6960119 KEM Algorithm (13,908-bytes).
+-type mceliece6960119_public_key() :: <<_:8378552>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 6960119 KEM Algorithm (1,047,319-bytes).
+-type mceliece6960119_cipher_text() :: <<_:1808>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 6960119 KEM Algorithm (226-bytes).
+-type mceliece6960119_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 6960119 KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece6960119_secret_key/0,
+    mceliece6960119_public_key/0,
+    mceliece6960119_cipher_text/0,
+    mceliece6960119_shared_secret/0
+]).
+
+-type mceliece6960119f_secret_key() :: <<_:111264>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 6960119f KEM Algorithm (13,908-bytes).
+-type mceliece6960119f_public_key() :: <<_:8378552>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 6960119f KEM Algorithm (1,047,319-bytes).
+-type mceliece6960119f_cipher_text() :: <<_:1808>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 6960119f KEM Algorithm (226-bytes).
+-type mceliece6960119f_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 6960119f KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece6960119f_secret_key/0,
+    mceliece6960119f_public_key/0,
+    mceliece6960119f_cipher_text/0,
+    mceliece6960119f_shared_secret/0
+]).
+
+-type mceliece8192128_secret_key() :: <<_:112640>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 8192128 KEM Algorithm (14,080-bytes).
+-type mceliece8192128_public_key() :: <<_:10862592>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 8192128 KEM Algorithm (1,357,824-bytes).
+-type mceliece8192128_cipher_text() :: <<_:1920>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 8192128 KEM Algorithm (240-bytes).
+-type mceliece8192128_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 8192128 KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece8192128_secret_key/0,
+    mceliece8192128_public_key/0,
+    mceliece8192128_cipher_text/0,
+    mceliece8192128_shared_secret/0
+]).
+
+-type mceliece8192128f_secret_key() :: <<_:112640>>.
+%%% Binary representation of a `SecretKey' for the Classic McEliece 8192128f KEM Algorithm (14,080-bytes).
+-type mceliece8192128f_public_key() :: <<_:10862592>>.
+%%% Binary representation of a `PublicKey' for the Classic McEliece 8192128f KEM Algorithm (1,357,824-bytes).
+-type mceliece8192128f_cipher_text() :: <<_:1920>>.
+%%% Binary representation of a `CipherText' for the Classic McEliece 8192128f KEM Algorithm (240-bytes).
+-type mceliece8192128f_shared_secret() :: <<_:256>>.
+%%% Binary representation of a `SharedSecret' for the Classic McEliece 8192128f KEM Algorithm (32-bytes).
+
+-export_type([
+    mceliece8192128f_secret_key/0,
+    mceliece8192128f_public_key/0,
+    mceliece8192128f_cipher_text/0,
+    mceliece8192128f_shared_secret/0
 ]).
 
 -type dilithium2_secret_key() :: <<_:20224>>.
@@ -1721,6 +1973,13 @@
 %%%=============================================================================
 
 %%% @doc
+%%% Returns the number of bytes of the stack size currently set for the Dirty Job CPU Thread.
+%%% @end
+-spec dirty_job_cpu_stack_size() -> StackSize :: non_neg_integer().
+dirty_job_cpu_stack_size() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
 %%% Returns information about the HQC-RMRS-128
 %%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
 %%%
@@ -1752,6 +2011,7 @@ hqc_rmrs_128_info() ->
 %%% ```
 %%% {PK, SK} = pqclean_nif:hqc_rmrs_128_keypair().
 %%% '''
+%%%
 %%%
 %%% @see hqc_rmrs_128_encapsulate/1
 %%% @see hqc_rmrs_128_decapsulate/2
@@ -1841,6 +2101,7 @@ hqc_rmrs_192_info() ->
 %%% {PK, SK} = pqclean_nif:hqc_rmrs_192_keypair().
 %%% '''
 %%%
+%%%
 %%% @see hqc_rmrs_192_encapsulate/1
 %%% @see hqc_rmrs_192_decapsulate/2
 %%% @end
@@ -1928,6 +2189,7 @@ hqc_rmrs_256_info() ->
 %%% ```
 %%% {PK, SK} = pqclean_nif:hqc_rmrs_256_keypair().
 %%% '''
+%%%
 %%%
 %%% @see hqc_rmrs_256_encapsulate/1
 %%% @see hqc_rmrs_256_decapsulate/2
@@ -2017,6 +2279,7 @@ kyber512_info() ->
 %%% {PK, SK} = pqclean_nif:kyber512_keypair().
 %%% '''
 %%%
+%%%
 %%% @see kyber512_encapsulate/1
 %%% @see kyber512_decapsulate/2
 %%% @end
@@ -2103,6 +2366,7 @@ kyber512_90s_info() ->
 %%% ```
 %%% {PK, SK} = pqclean_nif:kyber512_90s_keypair().
 %%% '''
+%%%
 %%%
 %%% @see kyber512_90s_encapsulate/1
 %%% @see kyber512_90s_decapsulate/2
@@ -2192,6 +2456,7 @@ kyber768_info() ->
 %%% {PK, SK} = pqclean_nif:kyber768_keypair().
 %%% '''
 %%%
+%%%
 %%% @see kyber768_encapsulate/1
 %%% @see kyber768_decapsulate/2
 %%% @end
@@ -2278,6 +2543,7 @@ kyber768_90s_info() ->
 %%% ```
 %%% {PK, SK} = pqclean_nif:kyber768_90s_keypair().
 %%% '''
+%%%
 %%%
 %%% @see kyber768_90s_encapsulate/1
 %%% @see kyber768_90s_decapsulate/2
@@ -2367,6 +2633,7 @@ kyber1024_info() ->
 %%% {PK, SK} = pqclean_nif:kyber1024_keypair().
 %%% '''
 %%%
+%%%
 %%% @see kyber1024_encapsulate/1
 %%% @see kyber1024_decapsulate/2
 %%% @end
@@ -2454,6 +2721,7 @@ kyber1024_90s_info() ->
 %%% {PK, SK} = pqclean_nif:kyber1024_90s_keypair().
 %%% '''
 %%%
+%%%
 %%% @see kyber1024_90s_encapsulate/1
 %%% @see kyber1024_90s_decapsulate/2
 %%% @end
@@ -2511,6 +2779,966 @@ kyber1024_90s_encapsulate(_PublicKey) ->
     SecretKey :: kyber1024_90s_secret_key(),
     SharedSecret :: kyber1024_90s_shared_secret().
 kyber1024_90s_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 348864
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 348864",
+%%%     secretkeybytes := 6452,
+%%%     publickeybytes := 261120,
+%%%     ciphertextbytes := 128,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece348864_info()
+%%% '''
+%%%
+%%% @see mceliece348864_keypair/0
+%%% @see mceliece348864_encapsulate/1
+%%% @see mceliece348864_decapsulate/2
+%%% @end
+-spec mceliece348864_info() -> crypto_kem_info().
+mceliece348864_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 348864 KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 261,120-bytes.
+%%%
+%%% `SecretKey' is a binary of size 6,452-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece348864_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 348864 requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece348864_encapsulate/1
+%%% @see mceliece348864_decapsulate/2
+%%% @end
+-spec mceliece348864_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece348864_public_key(), SecretKey :: mceliece348864_secret_key().
+mceliece348864_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 348864 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 128-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece348864_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece348864_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece348864_decapsulate/2
+%%% @end
+-spec mceliece348864_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece348864_public_key(),
+    CipherText :: mceliece348864_cipher_text(),
+    SharedSecret :: mceliece348864_shared_secret().
+mceliece348864_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 348864 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece348864_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece348864_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece348864_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece348864_encapsulate/1
+%%% @end
+-spec mceliece348864_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece348864_cipher_text(),
+    SecretKey :: mceliece348864_secret_key(),
+    SharedSecret :: mceliece348864_shared_secret().
+mceliece348864_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 348864f
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 348864f",
+%%%     secretkeybytes := 6452,
+%%%     publickeybytes := 261120,
+%%%     ciphertextbytes := 128,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece348864f_info()
+%%% '''
+%%%
+%%% @see mceliece348864f_keypair/0
+%%% @see mceliece348864f_encapsulate/1
+%%% @see mceliece348864f_decapsulate/2
+%%% @end
+-spec mceliece348864f_info() -> crypto_kem_info().
+mceliece348864f_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 348864f KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 261,120-bytes.
+%%%
+%%% `SecretKey' is a binary of size 6,452-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece348864f_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 348864f requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece348864f_encapsulate/1
+%%% @see mceliece348864f_decapsulate/2
+%%% @end
+-spec mceliece348864f_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece348864f_public_key(), SecretKey :: mceliece348864f_secret_key().
+mceliece348864f_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 348864f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 128-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece348864f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece348864f_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece348864f_decapsulate/2
+%%% @end
+-spec mceliece348864f_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece348864f_public_key(),
+    CipherText :: mceliece348864f_cipher_text(),
+    SharedSecret :: mceliece348864f_shared_secret().
+mceliece348864f_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 348864f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece348864f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece348864f_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece348864f_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece348864f_encapsulate/1
+%%% @end
+-spec mceliece348864f_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece348864f_cipher_text(),
+    SecretKey :: mceliece348864f_secret_key(),
+    SharedSecret :: mceliece348864f_shared_secret().
+mceliece348864f_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 460896
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 460896",
+%%%     secretkeybytes := 13568,
+%%%     publickeybytes := 524160,
+%%%     ciphertextbytes := 188,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece460896_info()
+%%% '''
+%%%
+%%% @see mceliece460896_keypair/0
+%%% @see mceliece460896_encapsulate/1
+%%% @see mceliece460896_decapsulate/2
+%%% @end
+-spec mceliece460896_info() -> crypto_kem_info().
+mceliece460896_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 460896 KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 524,160-bytes.
+%%%
+%%% `SecretKey' is a binary of size 13,568-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece460896_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 460896 requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece460896_encapsulate/1
+%%% @see mceliece460896_decapsulate/2
+%%% @end
+-spec mceliece460896_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece460896_public_key(), SecretKey :: mceliece460896_secret_key().
+mceliece460896_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 460896 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 188-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece460896_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece460896_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece460896_decapsulate/2
+%%% @end
+-spec mceliece460896_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece460896_public_key(),
+    CipherText :: mceliece460896_cipher_text(),
+    SharedSecret :: mceliece460896_shared_secret().
+mceliece460896_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 460896 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece460896_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece460896_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece460896_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece460896_encapsulate/1
+%%% @end
+-spec mceliece460896_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece460896_cipher_text(),
+    SecretKey :: mceliece460896_secret_key(),
+    SharedSecret :: mceliece460896_shared_secret().
+mceliece460896_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 460896f
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 460896f",
+%%%     secretkeybytes := 13568,
+%%%     publickeybytes := 524160,
+%%%     ciphertextbytes := 188,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece460896f_info()
+%%% '''
+%%%
+%%% @see mceliece460896f_keypair/0
+%%% @see mceliece460896f_encapsulate/1
+%%% @see mceliece460896f_decapsulate/2
+%%% @end
+-spec mceliece460896f_info() -> crypto_kem_info().
+mceliece460896f_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 460896f KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 524,160-bytes.
+%%%
+%%% `SecretKey' is a binary of size 13,568-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece460896f_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 460896f requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece460896f_encapsulate/1
+%%% @see mceliece460896f_decapsulate/2
+%%% @end
+-spec mceliece460896f_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece460896f_public_key(), SecretKey :: mceliece460896f_secret_key().
+mceliece460896f_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 460896f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 188-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece460896f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece460896f_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece460896f_decapsulate/2
+%%% @end
+-spec mceliece460896f_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece460896f_public_key(),
+    CipherText :: mceliece460896f_cipher_text(),
+    SharedSecret :: mceliece460896f_shared_secret().
+mceliece460896f_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 460896f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece460896f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece460896f_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece460896f_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece460896f_encapsulate/1
+%%% @end
+-spec mceliece460896f_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece460896f_cipher_text(),
+    SecretKey :: mceliece460896f_secret_key(),
+    SharedSecret :: mceliece460896f_shared_secret().
+mceliece460896f_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 6688128
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 6688128",
+%%%     secretkeybytes := 13892,
+%%%     publickeybytes := 1044992,
+%%%     ciphertextbytes := 240,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece6688128_info()
+%%% '''
+%%%
+%%% @see mceliece6688128_keypair/0
+%%% @see mceliece6688128_encapsulate/1
+%%% @see mceliece6688128_decapsulate/2
+%%% @end
+-spec mceliece6688128_info() -> crypto_kem_info().
+mceliece6688128_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 6688128 KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 1,044,992-bytes.
+%%%
+%%% `SecretKey' is a binary of size 13,892-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6688128_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 6688128 requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece6688128_encapsulate/1
+%%% @see mceliece6688128_decapsulate/2
+%%% @end
+-spec mceliece6688128_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece6688128_public_key(), SecretKey :: mceliece6688128_secret_key().
+mceliece6688128_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 6688128 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 240-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6688128_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6688128_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece6688128_decapsulate/2
+%%% @end
+-spec mceliece6688128_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece6688128_public_key(),
+    CipherText :: mceliece6688128_cipher_text(),
+    SharedSecret :: mceliece6688128_shared_secret().
+mceliece6688128_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 6688128 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6688128_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6688128_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece6688128_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece6688128_encapsulate/1
+%%% @end
+-spec mceliece6688128_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece6688128_cipher_text(),
+    SecretKey :: mceliece6688128_secret_key(),
+    SharedSecret :: mceliece6688128_shared_secret().
+mceliece6688128_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 6688128
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 6688128",
+%%%     secretkeybytes := 13892,
+%%%     publickeybytes := 1044992,
+%%%     ciphertextbytes := 240,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece6688128f_info()
+%%% '''
+%%%
+%%% @see mceliece6688128f_keypair/0
+%%% @see mceliece6688128f_encapsulate/1
+%%% @see mceliece6688128f_decapsulate/2
+%%% @end
+-spec mceliece6688128f_info() -> crypto_kem_info().
+mceliece6688128f_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 6688128 KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 1,044,992-bytes.
+%%%
+%%% `SecretKey' is a binary of size 13,892-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6688128f_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 6688128 requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece6688128f_encapsulate/1
+%%% @see mceliece6688128f_decapsulate/2
+%%% @end
+-spec mceliece6688128f_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece6688128f_public_key(), SecretKey :: mceliece6688128f_secret_key().
+mceliece6688128f_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 6688128 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 240-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6688128f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6688128f_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece6688128f_decapsulate/2
+%%% @end
+-spec mceliece6688128f_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece6688128f_public_key(),
+    CipherText :: mceliece6688128f_cipher_text(),
+    SharedSecret :: mceliece6688128f_shared_secret().
+mceliece6688128f_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 6688128 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6688128f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6688128f_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece6688128f_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece6688128f_encapsulate/1
+%%% @end
+-spec mceliece6688128f_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece6688128f_cipher_text(),
+    SecretKey :: mceliece6688128f_secret_key(),
+    SharedSecret :: mceliece6688128f_shared_secret().
+mceliece6688128f_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 6960119
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 6960119",
+%%%     secretkeybytes := 13908,
+%%%     publickeybytes := 1047319,
+%%%     ciphertextbytes := 226,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece6960119_info()
+%%% '''
+%%%
+%%% @see mceliece6960119_keypair/0
+%%% @see mceliece6960119_encapsulate/1
+%%% @see mceliece6960119_decapsulate/2
+%%% @end
+-spec mceliece6960119_info() -> crypto_kem_info().
+mceliece6960119_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 6960119 KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 1,047,319-bytes.
+%%%
+%%% `SecretKey' is a binary of size 13,908-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6960119_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 6960119 requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece6960119_encapsulate/1
+%%% @see mceliece6960119_decapsulate/2
+%%% @end
+-spec mceliece6960119_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece6960119_public_key(), SecretKey :: mceliece6960119_secret_key().
+mceliece6960119_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 6960119 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 226-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6960119_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6960119_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece6960119_decapsulate/2
+%%% @end
+-spec mceliece6960119_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece6960119_public_key(),
+    CipherText :: mceliece6960119_cipher_text(),
+    SharedSecret :: mceliece6960119_shared_secret().
+mceliece6960119_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 6960119 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6960119_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6960119_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece6960119_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece6960119_encapsulate/1
+%%% @end
+-spec mceliece6960119_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece6960119_cipher_text(),
+    SecretKey :: mceliece6960119_secret_key(),
+    SharedSecret :: mceliece6960119_shared_secret().
+mceliece6960119_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 6960119f
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 6960119f",
+%%%     secretkeybytes := 13908,
+%%%     publickeybytes := 1047319,
+%%%     ciphertextbytes := 226,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece6960119f_info()
+%%% '''
+%%%
+%%% @see mceliece6960119f_keypair/0
+%%% @see mceliece6960119f_encapsulate/1
+%%% @see mceliece6960119f_decapsulate/2
+%%% @end
+-spec mceliece6960119f_info() -> crypto_kem_info().
+mceliece6960119f_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 6960119f KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 1,047,319-bytes.
+%%%
+%%% `SecretKey' is a binary of size 13,908-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6960119f_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 6960119f requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece6960119f_encapsulate/1
+%%% @see mceliece6960119f_decapsulate/2
+%%% @end
+-spec mceliece6960119f_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece6960119f_public_key(), SecretKey :: mceliece6960119f_secret_key().
+mceliece6960119f_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 6960119f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 226-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6960119f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6960119f_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece6960119f_decapsulate/2
+%%% @end
+-spec mceliece6960119f_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece6960119f_public_key(),
+    CipherText :: mceliece6960119f_cipher_text(),
+    SharedSecret :: mceliece6960119f_shared_secret().
+mceliece6960119f_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 6960119f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece6960119f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece6960119f_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece6960119f_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece6960119f_encapsulate/1
+%%% @end
+-spec mceliece6960119f_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece6960119f_cipher_text(),
+    SecretKey :: mceliece6960119f_secret_key(),
+    SharedSecret :: mceliece6960119f_shared_secret().
+mceliece6960119f_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 8192128
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 8192128",
+%%%     secretkeybytes := 14080,
+%%%     publickeybytes := 1357824,
+%%%     ciphertextbytes := 240,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece8192128_info()
+%%% '''
+%%%
+%%% @see mceliece8192128_keypair/0
+%%% @see mceliece8192128_encapsulate/1
+%%% @see mceliece8192128_decapsulate/2
+%%% @end
+-spec mceliece8192128_info() -> crypto_kem_info().
+mceliece8192128_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 8192128 KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 1,357,824-bytes.
+%%%
+%%% `SecretKey' is a binary of size 14,080-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece8192128_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 8192128 requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece8192128_encapsulate/1
+%%% @see mceliece8192128_decapsulate/2
+%%% @end
+-spec mceliece8192128_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece8192128_public_key(), SecretKey :: mceliece8192128_secret_key().
+mceliece8192128_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 8192128 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 240-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece8192128_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece8192128_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece8192128_decapsulate/2
+%%% @end
+-spec mceliece8192128_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece8192128_public_key(),
+    CipherText :: mceliece8192128_cipher_text(),
+    SharedSecret :: mceliece8192128_shared_secret().
+mceliece8192128_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 8192128 KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece8192128_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece8192128_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece8192128_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece8192128_encapsulate/1
+%%% @end
+-spec mceliece8192128_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece8192128_cipher_text(),
+    SecretKey :: mceliece8192128_secret_key(),
+    SharedSecret :: mceliece8192128_shared_secret().
+mceliece8192128_decapsulate(_CipherText, _SecretKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Returns information about the Classic McEliece 8192128f
+%%% <a href="https://en.wikipedia.org/wiki/Key_encapsulation_mechanism">Key Encapsulation Mechanism (KEM)</a> Algorithm.
+%%%
+%%% ```
+%%% #{
+%%%     type := kem,
+%%%     name := "Classic McEliece 8192128f",
+%%%     secretkeybytes := 14080,
+%%%     publickeybytes := 1357824,
+%%%     ciphertextbytes := 240,
+%%%     sharedsecretbytes := 32
+%%% } = pqclean_nif:mceliece8192128f_info()
+%%% '''
+%%%
+%%% @see mceliece8192128f_keypair/0
+%%% @see mceliece8192128f_encapsulate/1
+%%% @see mceliece8192128f_decapsulate/2
+%%% @end
+-spec mceliece8192128f_info() -> crypto_kem_info().
+mceliece8192128f_info() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Randomly generates a new `PublicKey' and `SecretKey' keypair for the Classic McEliece 8192128f KEM Algorithm.
+%%%
+%%% `PublicKey' is a binary of size 1,357,824-bytes.
+%%%
+%%% `SecretKey' is a binary of size 14,080-bytes.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece8192128f_keypair().
+%%% '''
+%%%
+%%% <strong>WARNING:</strong> Classic McEliece 8192128f requires a large stack (>= 8MB).
+%%%
+%%% See <a href="readme.html#large-stack-support">Large Stack Support in the README</a> for more information.
+%%%
+%%% @see mceliece8192128f_encapsulate/1
+%%% @see mceliece8192128f_decapsulate/2
+%%% @end
+-spec mceliece8192128f_keypair() -> {PublicKey, SecretKey} when
+    PublicKey :: mceliece8192128f_public_key(), SecretKey :: mceliece8192128f_secret_key().
+mceliece8192128f_keypair() ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Encapsulates a new `SharedSecret' for `PublicKey' using the Classic McEliece 8192128f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `CipherText' is a binary of size 240-bytes.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece8192128f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece8192128f_encapsulate(PK).
+%%% '''
+%%%
+%%% @see mceliece8192128f_decapsulate/2
+%%% @end
+-spec mceliece8192128f_encapsulate(PublicKey) -> {CipherText, SharedSecret} when
+    PublicKey :: mceliece8192128f_public_key(),
+    CipherText :: mceliece8192128f_cipher_text(),
+    SharedSecret :: mceliece8192128f_shared_secret().
+mceliece8192128f_encapsulate(_PublicKey) ->
+    erlang:nif_error({nif_not_loaded, ?MODULE}).
+
+%%% @doc
+%%% Decapsulates a `SharedSecret' for from a `CipherText' and `SecretKey' using the Classic McEliece 8192128f KEM Algorithm.
+%%%
+%%% Anyone can encapsulate a new `SharedSecret' using the `PublicKey'.
+%%%
+%%% Only the owner of the corresponding `SecretKey' will be able to decapsulate the `SharedSecret'.
+%%%
+%%% `SharedSecret' is a binary of size 32-bytes.
+%%%
+%%% <strong>NOTE:</strong> Only `PublicKey' and `CipherText' are safe to share publicly, whereas `SecretKey' and `SharedSecret' are to be kept private.
+%%% ```
+%%% {PK, SK} = pqclean_nif:mceliece8192128f_keypair(),
+%%% {CT, SS} = pqclean_nif:mceliece8192128f_encapsulate(PK),
+%%%      SS  = pqclean_nif:mceliece8192128f_decapsulate(CT, SK).
+%%% '''
+%%%
+%%% @see mceliece8192128f_encapsulate/1
+%%% @end
+-spec mceliece8192128f_decapsulate(CipherText, SecretKey) -> SharedSecret when
+    CipherText :: mceliece8192128f_cipher_text(),
+    SecretKey :: mceliece8192128f_secret_key(),
+    SharedSecret :: mceliece8192128f_shared_secret().
+mceliece8192128f_decapsulate(_CipherText, _SecretKey) ->
     erlang:nif_error({nif_not_loaded, ?MODULE}).
 
 %%% @doc

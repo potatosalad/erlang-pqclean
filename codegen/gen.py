@@ -32,19 +32,19 @@ if __name__ == "__main__":
         with open(kem_meta_file, 'r') as f:
             kem_meta = yaml.safe_load(f)
         kem_makefile = os.path.join(basepath, '..', 'c_deps', 'PQClean', kem_data['src'], 'Makefile')
-        headers_pattern = r'HEADERS\s*=\s*(.+)$'
-        objects_pattern = r'OBJECTS\s*=\s*(.+)$'
+        headers_pattern = re.compile(r'HEADERS\s*=\s*((?:\S+\.[cho]\s*[\\\\\n\s]*)+)', re.MULTILINE)
+        objects_pattern = re.compile(r'OBJECTS\s*=\s*((?:\S+\.[cho]\s*[\\\\\n\s]*)+)', re.MULTILINE)
         kem_headers = []
         kem_objects = []
         kem_sources = []
         with open(kem_makefile, 'r') as f:
-            for line in f.readlines():
-                headers_captures = re.search(headers_pattern, line)
-                if headers_captures:
-                    kem_headers.extend(headers_captures.group(1).split())
-                objects_captures = re.search(objects_pattern, line)
-                if objects_captures:
-                    kem_objects.extend(objects_captures.group(1).split())
+            contents = f.read()
+            headers_captures = headers_pattern.search(contents)
+            if headers_captures:
+                kem_headers.extend(headers_captures.group(1).replace('\\\n', '').replace('\\', '').strip().split())
+            objects_captures = objects_pattern.search(contents)
+            if objects_captures:
+                kem_objects.extend(objects_captures.group(1).replace('\\\n', '').replace('\\', '').strip().split())
         for kem_object in kem_objects:
             kem_base_file, _ = os.path.splitext(kem_object)
             kem_source = kem_base_file + '.c'
@@ -80,19 +80,19 @@ if __name__ == "__main__":
                         sign_meta['length-seed'] = int(captures.group(1))
                         break
         sign_makefile = os.path.join(basepath, '..', 'c_deps', 'PQClean', sign_data['src'], 'Makefile')
-        headers_pattern = r'HEADERS\s*=\s*(.+)$'
-        objects_pattern = r'OBJECTS\s*=\s*(.+)$'
+        headers_pattern = re.compile(r'HEADERS\s*=\s*((?:\S+\.[cho]\s*[\\\\\n\s]*)+)', re.MULTILINE)
+        objects_pattern = re.compile(r'OBJECTS\s*=\s*((?:\S+\.[cho]\s*[\\\\\n\s]*)+)', re.MULTILINE)
         sign_headers = []
         sign_objects = []
         sign_sources = []
         with open(sign_makefile, 'r') as f:
-            for line in f.readlines():
-                headers_captures = re.search(headers_pattern, line)
-                if headers_captures:
-                    sign_headers.extend(headers_captures.group(1).split())
-                objects_captures = re.search(objects_pattern, line)
-                if objects_captures:
-                    sign_objects.extend(objects_captures.group(1).split())
+            contents = f.read()
+            headers_captures = headers_pattern.search(contents)
+            if headers_captures:
+                sign_headers.extend(headers_captures.group(1).replace('\\\n', '').replace('\\', '').strip().split())
+            objects_captures = objects_pattern.search(contents)
+            if objects_captures:
+                sign_objects.extend(objects_captures.group(1).replace('\\\n', '').replace('\\', '').strip().split())
         for sign_object in sign_objects:
             sign_base_file, _ = os.path.splitext(sign_object)
             sign_source = sign_base_file + '.c'

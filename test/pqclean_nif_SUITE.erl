@@ -54,6 +54,46 @@
     test_kyber1024_90s_keypair_0/1,
     test_kyber1024_90s_encapsulate_1/1,
     test_kyber1024_90s_decapsulate_2/1,
+    test_mceliece348864_info_0/1,
+    test_mceliece348864_keypair_0/1,
+    test_mceliece348864_encapsulate_1/1,
+    test_mceliece348864_decapsulate_2/1,
+    test_mceliece348864f_info_0/1,
+    test_mceliece348864f_keypair_0/1,
+    test_mceliece348864f_encapsulate_1/1,
+    test_mceliece348864f_decapsulate_2/1,
+    test_mceliece460896_info_0/1,
+    test_mceliece460896_keypair_0/1,
+    test_mceliece460896_encapsulate_1/1,
+    test_mceliece460896_decapsulate_2/1,
+    test_mceliece460896f_info_0/1,
+    test_mceliece460896f_keypair_0/1,
+    test_mceliece460896f_encapsulate_1/1,
+    test_mceliece460896f_decapsulate_2/1,
+    test_mceliece6688128_info_0/1,
+    test_mceliece6688128_keypair_0/1,
+    test_mceliece6688128_encapsulate_1/1,
+    test_mceliece6688128_decapsulate_2/1,
+    test_mceliece6688128f_info_0/1,
+    test_mceliece6688128f_keypair_0/1,
+    test_mceliece6688128f_encapsulate_1/1,
+    test_mceliece6688128f_decapsulate_2/1,
+    test_mceliece6960119_info_0/1,
+    test_mceliece6960119_keypair_0/1,
+    test_mceliece6960119_encapsulate_1/1,
+    test_mceliece6960119_decapsulate_2/1,
+    test_mceliece6960119f_info_0/1,
+    test_mceliece6960119f_keypair_0/1,
+    test_mceliece6960119f_encapsulate_1/1,
+    test_mceliece6960119f_decapsulate_2/1,
+    test_mceliece8192128_info_0/1,
+    test_mceliece8192128_keypair_0/1,
+    test_mceliece8192128_encapsulate_1/1,
+    test_mceliece8192128_decapsulate_2/1,
+    test_mceliece8192128f_info_0/1,
+    test_mceliece8192128f_keypair_0/1,
+    test_mceliece8192128f_encapsulate_1/1,
+    test_mceliece8192128f_decapsulate_2/1,
     test_dilithium2_info_0/1,
     test_dilithium2_keypair_0/1,
     test_dilithium2_sign_2/1,
@@ -312,7 +352,47 @@ groups() ->
             test_kyber1024_90s_info_0,
             test_kyber1024_90s_keypair_0,
             test_kyber1024_90s_encapsulate_1,
-            test_kyber1024_90s_decapsulate_2
+            test_kyber1024_90s_decapsulate_2,
+            test_mceliece348864_info_0,
+            test_mceliece348864_keypair_0,
+            test_mceliece348864_encapsulate_1,
+            test_mceliece348864_decapsulate_2,
+            test_mceliece348864f_info_0,
+            test_mceliece348864f_keypair_0,
+            test_mceliece348864f_encapsulate_1,
+            test_mceliece348864f_decapsulate_2,
+            test_mceliece460896_info_0,
+            test_mceliece460896_keypair_0,
+            test_mceliece460896_encapsulate_1,
+            test_mceliece460896_decapsulate_2,
+            test_mceliece460896f_info_0,
+            test_mceliece460896f_keypair_0,
+            test_mceliece460896f_encapsulate_1,
+            test_mceliece460896f_decapsulate_2,
+            test_mceliece6688128_info_0,
+            test_mceliece6688128_keypair_0,
+            test_mceliece6688128_encapsulate_1,
+            test_mceliece6688128_decapsulate_2,
+            test_mceliece6688128f_info_0,
+            test_mceliece6688128f_keypair_0,
+            test_mceliece6688128f_encapsulate_1,
+            test_mceliece6688128f_decapsulate_2,
+            test_mceliece6960119_info_0,
+            test_mceliece6960119_keypair_0,
+            test_mceliece6960119_encapsulate_1,
+            test_mceliece6960119_decapsulate_2,
+            test_mceliece6960119f_info_0,
+            test_mceliece6960119f_keypair_0,
+            test_mceliece6960119f_encapsulate_1,
+            test_mceliece6960119f_decapsulate_2,
+            test_mceliece8192128_info_0,
+            test_mceliece8192128_keypair_0,
+            test_mceliece8192128_encapsulate_1,
+            test_mceliece8192128_decapsulate_2,
+            test_mceliece8192128f_info_0,
+            test_mceliece8192128f_keypair_0,
+            test_mceliece8192128f_encapsulate_1,
+            test_mceliece8192128f_decapsulate_2
         ]},
         {sign, [parallel], [
             test_dilithium2_info_0,
@@ -862,6 +942,356 @@ test_kyber1024_90s_decapsulate_2(_Config) ->
     {<<PK:1568/bytes>>, <<SK:3168/bytes>>} = pqclean_nif:kyber1024_90s_keypair(),
     {<<CT:1568/bytes>>, <<SS:32/bytes>>} = pqclean_nif:kyber1024_90s_encapsulate(PK),
     ?assertEqual(SS, pqclean_nif:kyber1024_90s_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece348864_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 348864",
+            secretkeybytes := 6452,
+            publickeybytes := 261120,
+            ciphertextbytes := 128,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece348864_info()
+    ),
+    ok.
+
+test_mceliece348864_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:261120/bytes>>, <<_SK:6452/bytes>>},
+        pqclean_nif:mceliece348864_keypair()
+    ),
+    ok.
+
+test_mceliece348864_encapsulate_1(_Config) ->
+    {<<PK:261120/bytes>>, <<_SK:6452/bytes>>} = pqclean_nif:mceliece348864_keypair(),
+    ?assertMatch(
+        {<<_CT:128/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece348864_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece348864_decapsulate_2(_Config) ->
+    {<<PK:261120/bytes>>, <<SK:6452/bytes>>} = pqclean_nif:mceliece348864_keypair(),
+    {<<CT:128/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece348864_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece348864_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece348864f_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 348864f",
+            secretkeybytes := 6452,
+            publickeybytes := 261120,
+            ciphertextbytes := 128,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece348864f_info()
+    ),
+    ok.
+
+test_mceliece348864f_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:261120/bytes>>, <<_SK:6452/bytes>>},
+        pqclean_nif:mceliece348864f_keypair()
+    ),
+    ok.
+
+test_mceliece348864f_encapsulate_1(_Config) ->
+    {<<PK:261120/bytes>>, <<_SK:6452/bytes>>} = pqclean_nif:mceliece348864f_keypair(),
+    ?assertMatch(
+        {<<_CT:128/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece348864f_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece348864f_decapsulate_2(_Config) ->
+    {<<PK:261120/bytes>>, <<SK:6452/bytes>>} = pqclean_nif:mceliece348864f_keypair(),
+    {<<CT:128/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece348864f_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece348864f_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece460896_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 460896",
+            secretkeybytes := 13568,
+            publickeybytes := 524160,
+            ciphertextbytes := 188,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece460896_info()
+    ),
+    ok.
+
+test_mceliece460896_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:524160/bytes>>, <<_SK:13568/bytes>>},
+        pqclean_nif:mceliece460896_keypair()
+    ),
+    ok.
+
+test_mceliece460896_encapsulate_1(_Config) ->
+    {<<PK:524160/bytes>>, <<_SK:13568/bytes>>} = pqclean_nif:mceliece460896_keypair(),
+    ?assertMatch(
+        {<<_CT:188/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece460896_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece460896_decapsulate_2(_Config) ->
+    {<<PK:524160/bytes>>, <<SK:13568/bytes>>} = pqclean_nif:mceliece460896_keypair(),
+    {<<CT:188/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece460896_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece460896_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece460896f_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 460896f",
+            secretkeybytes := 13568,
+            publickeybytes := 524160,
+            ciphertextbytes := 188,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece460896f_info()
+    ),
+    ok.
+
+test_mceliece460896f_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:524160/bytes>>, <<_SK:13568/bytes>>},
+        pqclean_nif:mceliece460896f_keypair()
+    ),
+    ok.
+
+test_mceliece460896f_encapsulate_1(_Config) ->
+    {<<PK:524160/bytes>>, <<_SK:13568/bytes>>} = pqclean_nif:mceliece460896f_keypair(),
+    ?assertMatch(
+        {<<_CT:188/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece460896f_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece460896f_decapsulate_2(_Config) ->
+    {<<PK:524160/bytes>>, <<SK:13568/bytes>>} = pqclean_nif:mceliece460896f_keypair(),
+    {<<CT:188/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece460896f_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece460896f_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece6688128_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 6688128",
+            secretkeybytes := 13892,
+            publickeybytes := 1044992,
+            ciphertextbytes := 240,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece6688128_info()
+    ),
+    ok.
+
+test_mceliece6688128_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:1044992/bytes>>, <<_SK:13892/bytes>>},
+        pqclean_nif:mceliece6688128_keypair()
+    ),
+    ok.
+
+test_mceliece6688128_encapsulate_1(_Config) ->
+    {<<PK:1044992/bytes>>, <<_SK:13892/bytes>>} = pqclean_nif:mceliece6688128_keypair(),
+    ?assertMatch(
+        {<<_CT:240/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece6688128_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece6688128_decapsulate_2(_Config) ->
+    {<<PK:1044992/bytes>>, <<SK:13892/bytes>>} = pqclean_nif:mceliece6688128_keypair(),
+    {<<CT:240/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece6688128_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece6688128_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece6688128f_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 6688128",
+            secretkeybytes := 13892,
+            publickeybytes := 1044992,
+            ciphertextbytes := 240,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece6688128f_info()
+    ),
+    ok.
+
+test_mceliece6688128f_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:1044992/bytes>>, <<_SK:13892/bytes>>},
+        pqclean_nif:mceliece6688128f_keypair()
+    ),
+    ok.
+
+test_mceliece6688128f_encapsulate_1(_Config) ->
+    {<<PK:1044992/bytes>>, <<_SK:13892/bytes>>} = pqclean_nif:mceliece6688128f_keypair(),
+    ?assertMatch(
+        {<<_CT:240/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece6688128f_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece6688128f_decapsulate_2(_Config) ->
+    {<<PK:1044992/bytes>>, <<SK:13892/bytes>>} = pqclean_nif:mceliece6688128f_keypair(),
+    {<<CT:240/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece6688128f_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece6688128f_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece6960119_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 6960119",
+            secretkeybytes := 13908,
+            publickeybytes := 1047319,
+            ciphertextbytes := 226,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece6960119_info()
+    ),
+    ok.
+
+test_mceliece6960119_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:1047319/bytes>>, <<_SK:13908/bytes>>},
+        pqclean_nif:mceliece6960119_keypair()
+    ),
+    ok.
+
+test_mceliece6960119_encapsulate_1(_Config) ->
+    {<<PK:1047319/bytes>>, <<_SK:13908/bytes>>} = pqclean_nif:mceliece6960119_keypair(),
+    ?assertMatch(
+        {<<_CT:226/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece6960119_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece6960119_decapsulate_2(_Config) ->
+    {<<PK:1047319/bytes>>, <<SK:13908/bytes>>} = pqclean_nif:mceliece6960119_keypair(),
+    {<<CT:226/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece6960119_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece6960119_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece6960119f_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 6960119f",
+            secretkeybytes := 13908,
+            publickeybytes := 1047319,
+            ciphertextbytes := 226,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece6960119f_info()
+    ),
+    ok.
+
+test_mceliece6960119f_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:1047319/bytes>>, <<_SK:13908/bytes>>},
+        pqclean_nif:mceliece6960119f_keypair()
+    ),
+    ok.
+
+test_mceliece6960119f_encapsulate_1(_Config) ->
+    {<<PK:1047319/bytes>>, <<_SK:13908/bytes>>} = pqclean_nif:mceliece6960119f_keypair(),
+    ?assertMatch(
+        {<<_CT:226/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece6960119f_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece6960119f_decapsulate_2(_Config) ->
+    {<<PK:1047319/bytes>>, <<SK:13908/bytes>>} = pqclean_nif:mceliece6960119f_keypair(),
+    {<<CT:226/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece6960119f_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece6960119f_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece8192128_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 8192128",
+            secretkeybytes := 14080,
+            publickeybytes := 1357824,
+            ciphertextbytes := 240,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece8192128_info()
+    ),
+    ok.
+
+test_mceliece8192128_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:1357824/bytes>>, <<_SK:14080/bytes>>},
+        pqclean_nif:mceliece8192128_keypair()
+    ),
+    ok.
+
+test_mceliece8192128_encapsulate_1(_Config) ->
+    {<<PK:1357824/bytes>>, <<_SK:14080/bytes>>} = pqclean_nif:mceliece8192128_keypair(),
+    ?assertMatch(
+        {<<_CT:240/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece8192128_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece8192128_decapsulate_2(_Config) ->
+    {<<PK:1357824/bytes>>, <<SK:14080/bytes>>} = pqclean_nif:mceliece8192128_keypair(),
+    {<<CT:240/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece8192128_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece8192128_decapsulate(CT, SK)),
+    ok.
+
+test_mceliece8192128f_info_0(_Config) ->
+    ?assertMatch(
+        CryptoKemInfo = #{
+            type := kem,
+            name := "Classic McEliece 8192128f",
+            secretkeybytes := 14080,
+            publickeybytes := 1357824,
+            ciphertextbytes := 240,
+            sharedsecretbytes := 32
+        } when map_size(CryptoKemInfo) =:= 6,
+        pqclean_nif:mceliece8192128f_info()
+    ),
+    ok.
+
+test_mceliece8192128f_keypair_0(_Config) ->
+    ?assertMatch(
+        {<<_PK:1357824/bytes>>, <<_SK:14080/bytes>>},
+        pqclean_nif:mceliece8192128f_keypair()
+    ),
+    ok.
+
+test_mceliece8192128f_encapsulate_1(_Config) ->
+    {<<PK:1357824/bytes>>, <<_SK:14080/bytes>>} = pqclean_nif:mceliece8192128f_keypair(),
+    ?assertMatch(
+        {<<_CT:240/bytes>>, <<_SS:32/bytes>>},
+        pqclean_nif:mceliece8192128f_encapsulate(PK)
+    ),
+    ok.
+
+test_mceliece8192128f_decapsulate_2(_Config) ->
+    {<<PK:1357824/bytes>>, <<SK:14080/bytes>>} = pqclean_nif:mceliece8192128f_keypair(),
+    {<<CT:240/bytes>>, <<SS:32/bytes>>} = pqclean_nif:mceliece8192128f_encapsulate(PK),
+    ?assertEqual(SS, pqclean_nif:mceliece8192128f_decapsulate(CT, SK)),
     ok.
 
 test_dilithium2_info_0(_Config) ->

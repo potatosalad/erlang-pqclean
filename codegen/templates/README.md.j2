@@ -13,7 +13,7 @@ Add `pqclean` to your project's dependencies in `mix.exs`
 ```elixir
 defp deps do
   [
-    {:pqclean, "~> 0.0.2"}
+    {:pqclean, "~> 0.0.3"}
   ]
 end
 ```
@@ -22,7 +22,7 @@ Add `pqclean` to your project's dependencies in your `Makefile` for [`erlang.mk`
 
 ```erlang
 {deps, [
-    {pqclean, "0.0.2"}
+    {pqclean, "0.0.3"}
 ]}.
 ```
 
@@ -112,13 +112,42 @@ true = pqclean_nif:falcon512_verify(Sig, Msg, PK).
 | KEM Algorithm | NIST Level | Public Key | Secret Key | Cipher Text | Shared Secret |
 | ------------- | ----------:| ----------:| ----------:| -----------:| -------------:|
 {% for kem in kem_algorithms %}
-| `{{ kem.meta.name }}` | {{ kem.meta['claimed-nist-level'] }} | {{ "{:,}".format(kem.meta['length-public-key']) }} | {{ "{:,}".format(kem.meta['length-secret-key']) }} | {{ "{:,}".format(kem.meta['length-ciphertext']) }} | {{ "{:,}".format(kem.meta['length-shared-secret']) }} |
+| `{{ kem.meta.name }}`{% if kem['large_stack'] %}†{% endif %} | {{ kem.meta['claimed-nist-level'] }} | {{ "{:,}".format(kem.meta['length-public-key']) }} | {{ "{:,}".format(kem.meta['length-secret-key']) }} | {{ "{:,}".format(kem.meta['length-ciphertext']) }} | {{ "{:,}".format(kem.meta['length-shared-secret']) }} |
 {% endfor %}
+
+**WARNING:** Algorithms marked with a dagger (†) require a large stack for key generation.  See below for more information.
+
+### Large Stack Support
+
+When generating keys for "large stack" algorithms, an exception will be raised if the detected stack size is below 8MB:
+
+```erl
+1> try pqclean_nif:mceliece348864_keypair() catch error:{badarg, {_File, _Line}, Reason} -> Reason end.
+"Key generation for Classic McEliece 348864 requires a large stack (>= 8MB): "
+"please restart the BEAM with `erl +sssdcpu 1024` on 64-bit machines "
+"(or `erl +sssdcpu 2048` on 32-bit machines); current setting is `erl +sssdcpu 41`"
+```
+
+Restarting the BEAM with `erl +sssdcpu 1024` on 64-bit systems will allow key generation for these algorithms to be supported.
+
+_NOTE:_ If using an `escript`, `rebar3`, `elixir`, etc: it may be simpler to use the environment variable `ERL_AFLAGS="+sssdcpu 1024"` instead.
+
+```bash
+$ erl +sssdcpu 1024
+```
+
+```erl
+1> {PK, SK} = pqclean_nif:mceliece348864_keypair().
+{<<38,72,183,62,48,9,8,23,83,149,228,233,255,143,120,71,
+   113,143,14,95,28,157,43,73,51,99,6,79,...>>,
+ <<116,53,239,220,26,165,236,199,7,246,124,172,167,182,
+   154,60,152,213,9,243,206,191,24,129,129,73,132,...>>}
+```
 
 ## Signature Algorithm Support
 
 | Signature Algorithm | NIST Level | Public Key | Secret Key | Signature | Seed |
 | ------------------- | ----------:| ----------:| ----------:| ---------:| ----:|
 {% for sig in sign_algorithms %}
-| `{{ sig.meta.name }}` | {{ sig.meta['claimed-nist-level'] }} | {{ "{:,}".format(sig.meta['length-public-key']) }} | {{ "{:,}".format(sig.meta['length-secret-key']) }} | {{ "{:,}".format(sig.meta['length-signature']) }} | {{ sig.meta['length-seed'] if sig.meta['length-seed'] else "&mdash;" }} |
+| `{{ sig.meta.name }}` | {{ sig.meta['claimed-nist-level'] }} | {{ "{:,}".format(sig.meta['length-public-key']) }} | {{ "{:,}".format(sig.meta['length-secret-key']) }} | {{ "{:,}".format(sig.meta['length-signature']) }} | {{ sig.meta['length-seed'] if sig.meta['length-seed'] else "—" }} |
 {% endfor %}

@@ -1,7 +1,18 @@
 #include "pqclean_nif.h"
 
+#include <errno.h>
 #include <stdbool.h>
 #include <unistd.h>
+
+#if defined(__APPLE__)
+#include <pthread.h>
+#elif defined(__FreeBSD__)
+#include <pthread.h>
+#include <pthread_np.h>
+#elif defined(__linux__)
+#define _GNU_SOURCE
+#include <pthread.h>
+#endif
 
 #include "pqclean_nif_hqc_rmrs_128.h"
 #include "pqclean_nif_hqc_rmrs_192.h"
@@ -12,6 +23,16 @@
 #include "pqclean_nif_kyber768_90s.h"
 #include "pqclean_nif_kyber1024.h"
 #include "pqclean_nif_kyber1024_90s.h"
+#include "pqclean_nif_mceliece348864.h"
+#include "pqclean_nif_mceliece348864f.h"
+#include "pqclean_nif_mceliece460896.h"
+#include "pqclean_nif_mceliece460896f.h"
+#include "pqclean_nif_mceliece6688128.h"
+#include "pqclean_nif_mceliece6688128f.h"
+#include "pqclean_nif_mceliece6960119.h"
+#include "pqclean_nif_mceliece6960119f.h"
+#include "pqclean_nif_mceliece8192128.h"
+#include "pqclean_nif_mceliece8192128f.h"
 
 #include "pqclean_nif_dilithium2.h"
 #include "pqclean_nif_dilithium2aes.h"
@@ -69,13 +90,93 @@ pqclean_nif_atom_table_t *pqclean_nif_atom_table = &pqclean_nif_atom_table_inter
 
 /* Resource Type Functions (Declarations) */
 
+/* Global Function Definitions */
+
+int
+_pqclean_nif_get_thread_stack_size(size_t *stack_sizep, ErlNifEnv *env, ERL_NIF_TERM *error_term)
+{
+    size_t stack_size = 0;
+#if defined(__FreeBSD__) || defined(__linux__)
+    pthread_attr_t attr;
+    int retval;
+    int errnum;
+#endif
+
+#if defined(__APPLE__)
+    stack_size = (size_t)pthread_get_stacksize_np(pthread_self());
+#elif defined(__FreeBSD__)
+    retval = pthread_attr_get_np(pthread_self(), &attr);
+    if (retval != 0) {
+        errnum = errno;
+        if (env != NULL && error_term != NULL) {
+            *error_term = EXCP_ERROR_F(env, "Call to pthread_attr_get_np() failed: %s", strerror(errnum));
+        }
+        return -1;
+    }
+    retval = pthread_attr_getstacksize(&attr, &stack_size);
+    if (retval != 0) {
+        errnum = errno;
+        (void)pthread_attr_destroy(&attr);
+        if (env != NULL && error_term != NULL) {
+            *error_term = EXCP_ERROR_F(env, "Call to pthread_attr_getstacksize() failed: %s", strerror(errnum));
+        }
+        return -1;
+    }
+#elif defined(__linux__)
+    retval = pthread_getattr_np(pthread_self(), &attr);
+    if (retval != 0) {
+        errnum = errno;
+        if (env != NULL && error_term != NULL) {
+            *error_term = EXCP_ERROR_F(env, "Call to pthread_getattr_np() failed: %s", strerror(errnum));
+        }
+        return -1;
+    }
+    retval = pthread_attr_getstacksize(&attr, &stack_size);
+    if (retval != 0) {
+        errnum = errno;
+        (void)pthread_attr_destroy(&attr);
+        if (env != NULL && error_term != NULL) {
+            *error_term = EXCP_ERROR_F(env, "Call to pthread_attr_getstacksize() failed: %s", strerror(errnum));
+        }
+        return -1;
+    }
+#else
+    return -1;
+#endif
+    if (stack_sizep != NULL) {
+        *stack_sizep = stack_size;
+    }
+#if defined(__FreeBSD__) || defined(__linux__)
+    (void)pthread_attr_destroy(&attr);
+#endif
+
+    return 0;
+}
+
 /* NIF Function Declarations */
 
+static ERL_NIF_TERM pqclean_nif_dirty_job_cpu_stack_size_0(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[]);
+
 /* NIF Function Definitions */
+
+ERL_NIF_TERM
+pqclean_nif_dirty_job_cpu_stack_size_0(ErlNifEnv *env, int argc, const ERL_NIF_TERM argv[])
+{
+    size_t stack_size = 0;
+    ERL_NIF_TERM out_term;
+
+    if (_pqclean_nif_get_thread_stack_size(&stack_size, env, &out_term) != 0) {
+        return out_term;
+    }
+
+    out_term = enif_make_uint64(env, (ErlNifUInt64)stack_size);
+    return out_term;
+}
 
 /* NIF Callbacks */
 
 static ErlNifFunc pqclean_nif_funcs[] = {
+    {"dirty_job_cpu_stack_size", 0, pqclean_nif_dirty_job_cpu_stack_size_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
     {"hqc_rmrs_128_info", 0, pqclean_nif_hqc_rmrs_128_info_0, ERL_NIF_NORMAL_JOB_BOUND},
     {"hqc_rmrs_128_keypair", 0, pqclean_nif_hqc_rmrs_128_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
     {"hqc_rmrs_128_encapsulate", 1, pqclean_nif_hqc_rmrs_128_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
@@ -112,6 +213,46 @@ static ErlNifFunc pqclean_nif_funcs[] = {
     {"kyber1024_90s_keypair", 0, pqclean_nif_kyber1024_90s_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
     {"kyber1024_90s_encapsulate", 1, pqclean_nif_kyber1024_90s_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
     {"kyber1024_90s_decapsulate", 2, pqclean_nif_kyber1024_90s_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece348864_info", 0, pqclean_nif_mceliece348864_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece348864_keypair", 0, pqclean_nif_mceliece348864_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece348864_encapsulate", 1, pqclean_nif_mceliece348864_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece348864_decapsulate", 2, pqclean_nif_mceliece348864_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece348864f_info", 0, pqclean_nif_mceliece348864f_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece348864f_keypair", 0, pqclean_nif_mceliece348864f_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece348864f_encapsulate", 1, pqclean_nif_mceliece348864f_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece348864f_decapsulate", 2, pqclean_nif_mceliece348864f_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece460896_info", 0, pqclean_nif_mceliece460896_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece460896_keypair", 0, pqclean_nif_mceliece460896_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece460896_encapsulate", 1, pqclean_nif_mceliece460896_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece460896_decapsulate", 2, pqclean_nif_mceliece460896_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece460896f_info", 0, pqclean_nif_mceliece460896f_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece460896f_keypair", 0, pqclean_nif_mceliece460896f_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece460896f_encapsulate", 1, pqclean_nif_mceliece460896f_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece460896f_decapsulate", 2, pqclean_nif_mceliece460896f_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6688128_info", 0, pqclean_nif_mceliece6688128_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece6688128_keypair", 0, pqclean_nif_mceliece6688128_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6688128_encapsulate", 1, pqclean_nif_mceliece6688128_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6688128_decapsulate", 2, pqclean_nif_mceliece6688128_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6688128f_info", 0, pqclean_nif_mceliece6688128f_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece6688128f_keypair", 0, pqclean_nif_mceliece6688128f_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6688128f_encapsulate", 1, pqclean_nif_mceliece6688128f_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6688128f_decapsulate", 2, pqclean_nif_mceliece6688128f_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6960119_info", 0, pqclean_nif_mceliece6960119_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece6960119_keypair", 0, pqclean_nif_mceliece6960119_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6960119_encapsulate", 1, pqclean_nif_mceliece6960119_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6960119_decapsulate", 2, pqclean_nif_mceliece6960119_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6960119f_info", 0, pqclean_nif_mceliece6960119f_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece6960119f_keypair", 0, pqclean_nif_mceliece6960119f_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6960119f_encapsulate", 1, pqclean_nif_mceliece6960119f_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece6960119f_decapsulate", 2, pqclean_nif_mceliece6960119f_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece8192128_info", 0, pqclean_nif_mceliece8192128_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece8192128_keypair", 0, pqclean_nif_mceliece8192128_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece8192128_encapsulate", 1, pqclean_nif_mceliece8192128_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece8192128_decapsulate", 2, pqclean_nif_mceliece8192128_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece8192128f_info", 0, pqclean_nif_mceliece8192128f_info_0, ERL_NIF_NORMAL_JOB_BOUND},
+    {"mceliece8192128f_keypair", 0, pqclean_nif_mceliece8192128f_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece8192128f_encapsulate", 1, pqclean_nif_mceliece8192128f_encapsulate_1, ERL_NIF_DIRTY_JOB_CPU_BOUND},
+    {"mceliece8192128f_decapsulate", 2, pqclean_nif_mceliece8192128f_decapsulate_2, ERL_NIF_DIRTY_JOB_CPU_BOUND},
 
     {"dilithium2_info", 0, pqclean_nif_dilithium2_info_0, ERL_NIF_NORMAL_JOB_BOUND},
     {"dilithium2_keypair", 0, pqclean_nif_dilithium2_keypair_0, ERL_NIF_DIRTY_JOB_CPU_BOUND},
