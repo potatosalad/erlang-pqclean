@@ -109,9 +109,11 @@ endif
 
 CFLAGS += -fno-omit-frame-pointer \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
+	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 CXXFLAGS += -fno-omit-frame-pointer \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
+	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 
 LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" \
@@ -377,164 +379,990 @@ PQCLEAN_COMMON_OBJECTS = \
 $(PQCLEAN_COMMON_OUTPUT): $(PQCLEAN_SRC_DIR) $(PQCLEAN_COMMON_OBJECTS)
 	$(AR) -r $@ $(PQCLEAN_COMMON_OBJECTS)
 
-$(PQCLEAN_HQCRMRS128_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_HQCRMRS128_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/code.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/fft.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/gf2x.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/hqc.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/parsing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/reed_muller.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/reed_solomon.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-128/clean/vector.o
 
-$(PQCLEAN_HQCRMRS192_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_HQCRMRS128_CLEAN_OUTPUT): $(PQCLEAN_HQCRMRS128_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_HQCRMRS128_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_HQCRMRS256_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_HQCRMRS128_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_KYBER512_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_HQCRMRS192_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/code.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/fft.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/gf2x.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/hqc.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/parsing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/reed_muller.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/reed_solomon.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-192/clean/vector.o
 
-$(PQCLEAN_KYBER51290S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_HQCRMRS192_CLEAN_OUTPUT): $(PQCLEAN_HQCRMRS192_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_HQCRMRS192_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_KYBER768_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_HQCRMRS192_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_KYBER76890S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_HQCRMRS256_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/code.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/fft.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/gf2x.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/gf.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/hqc.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/parsing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/reed_muller.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/reed_solomon.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/hqc-rmrs-256/clean/vector.o
 
-$(PQCLEAN_KYBER1024_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_HQCRMRS256_CLEAN_OUTPUT): $(PQCLEAN_HQCRMRS256_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_HQCRMRS256_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_KYBER102490S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_HQCRMRS256_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_KYBER512_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/cbd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/indcpa.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/symmetric-shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512/clean/verify.o
 
-$(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_KYBER512_CLEAN_OUTPUT): $(PQCLEAN_KYBER512_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_KYBER512_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_KYBER512_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_DILITHIUM3AES_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_KYBER51290S_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/cbd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/indcpa.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/symmetric-aes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber512-90s/clean/verify.o
 
-$(PQCLEAN_DILITHIUM5_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_KYBER51290S_CLEAN_OUTPUT): $(PQCLEAN_KYBER51290S_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_KYBER51290S_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_DILITHIUM5AES_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_KYBER51290S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_FALCON512_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_KYBER768_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/cbd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/indcpa.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/symmetric-shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768/clean/verify.o
 
-$(PQCLEAN_FALCON1024_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_KYBER768_CLEAN_OUTPUT): $(PQCLEAN_KYBER768_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_KYBER768_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_KYBER768_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_KYBER76890S_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/cbd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/indcpa.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/symmetric-aes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber768-90s/clean/verify.o
 
-$(PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_KYBER76890S_CLEAN_OUTPUT): $(PQCLEAN_KYBER76890S_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_KYBER76890S_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_KYBER76890S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_KYBER1024_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/cbd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/indcpa.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/symmetric-shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024/clean/verify.o
 
-$(PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_KYBER1024_CLEAN_OUTPUT): $(PQCLEAN_KYBER1024_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_KYBER1024_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_KYBER1024_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_KYBER102490S_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/cbd.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/indcpa.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/kem.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/symmetric-aes.o \
+	$(PQCLEAN_SRC_DIR)/crypto_kem/kyber1024-90s/clean/verify.o
 
-$(PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_KYBER102490S_CLEAN_OUTPUT): $(PQCLEAN_KYBER102490S_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_KYBER102490S_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_KYBER102490S_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_DILITHIUM2_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/packing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/rounding.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2/clean/symmetric-shake.o
 
-$(PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT): $(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_DILITHIUM2_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/packing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/rounding.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium2aes/clean/symmetric-aes.o
 
-$(PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT): $(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_DILITHIUM2AES_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_DILITHIUM3_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/packing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/rounding.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3/clean/symmetric-shake.o
 
-$(PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT): $(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_DILITHIUM3_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_DILITHIUM3AES_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/packing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/rounding.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium3aes/clean/symmetric-aes.o
 
-$(PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_DILITHIUM3AES_CLEAN_OUTPUT): $(PQCLEAN_DILITHIUM3AES_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_DILITHIUM3AES_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_DILITHIUM3AES_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_DILITHIUM5_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/packing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/rounding.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5/clean/symmetric-shake.o
 
-$(PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_DILITHIUM5_CLEAN_OUTPUT): $(PQCLEAN_DILITHIUM5_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_DILITHIUM5_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_DILITHIUM5_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_DILITHIUM5AES_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/aes256ctr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/ntt.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/packing.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/poly.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/polyvec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/reduce.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/rounding.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/dilithium5aes/clean/symmetric-aes.o
 
-$(PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_DILITHIUM5AES_CLEAN_OUTPUT): $(PQCLEAN_DILITHIUM5AES_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_DILITHIUM5AES_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_DILITHIUM5AES_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_FALCON512_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/codec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/common.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/fft.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/fpr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/keygen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/pqclean.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/rng.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-512/clean/vrfy.o
 
-$(PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_FALCON512_CLEAN_OUTPUT): $(PQCLEAN_FALCON512_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_FALCON512_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_FALCON512_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_FALCON1024_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/codec.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/common.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/fft.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/fpr.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/keygen.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/pqclean.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/rng.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/falcon-1024/clean/vrfy.o
 
-$(PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_FALCON1024_CLEAN_OUTPUT): $(PQCLEAN_FALCON1024_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_FALCON1024_CLEAN_OUTPUT_OBJECTS)
 
-$(PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+# $(PQCLEAN_FALCON1024_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
-$(PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/thash_haraka_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-robust/clean/wotsx1.o
 
-$(PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+$(PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/thash_haraka_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/thash_haraka_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/thash_haraka_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-128s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/thash_haraka_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/thash_haraka_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/thash_haraka_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/thash_haraka_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-192s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/thash_haraka_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/thash_haraka_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/thash_haraka_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/context_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/hash_haraka.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/thash_haraka_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-haraka-256s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSHARAKA256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/thash_sha2_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/thash_sha2_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/thash_sha2_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/thash_sha2_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-128s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/thash_sha2_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/thash_sha2_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/thash_sha2_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/thash_sha2_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-192s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/thash_sha2_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/thash_sha2_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/thash_sha2_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/context_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/hash_sha2.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/thash_sha2_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-sha2-256s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHA2256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/thash_shake_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE128FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/thash_shake_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE128FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/thash_shake_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE128SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/thash_shake_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-128s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE128SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/thash_shake_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE192FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/thash_shake_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE192FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/thash_shake_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE192SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/thash_shake_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-192s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE192SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/thash_shake_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE256FROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/thash_shake_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256f-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE256FSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/thash_shake_robust.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-robust/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE256SROBUST_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+
+PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT_OBJECTS = \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/address.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/context_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/fors.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/hash_shake.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/merkle.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/sign.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/thash_shake_simple.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/utils.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/utilsx1.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/wots.o \
+	$(PQCLEAN_SRC_DIR)/crypto_sign/sphincs-shake-256s-simple/clean/wotsx1.o
+
+$(PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+	$(AR) -r $@ $(PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT_OBJECTS)
+
+# $(PQCLEAN_SPHINCSSHAKE256SSIMPLE_CLEAN_OUTPUT): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
 
 $(C_SRC_OUTPUT_FILE): deps $(OBJECTS)

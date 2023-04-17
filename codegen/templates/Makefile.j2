@@ -109,9 +109,11 @@ endif
 
 CFLAGS += -fno-omit-frame-pointer \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
+	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 CXXFLAGS += -fno-omit-frame-pointer \
 	-I"$(ERTS_INCLUDE_DIR)" -I"$(ERL_INTERFACE_INCLUDE_DIR)" \
+	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 
 LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" \
@@ -166,6 +168,9 @@ c_verbose = $(c_verbose_$(V))
 
 cpp_verbose_0 = @echo " CPP   " $(filter-out $(notdir $(MAKEFILE_LIST) $(C_SRC_ENV)),$(^F));
 cpp_verbose = $(cpp_verbose_$(V))
+
+ar_verbose_0 = @echo " AR    " $(@F);
+ar_verbose = $(ar_verbose_$(V))
 
 link_verbose_0 = @echo " LD    " $(@F);
 link_verbose = $(link_verbose_$(V))
@@ -229,11 +234,20 @@ PQCLEAN_COMMON_OBJECTS = \
 	$(PQCLEAN_SRC_DIR)/common/sp800-185.o
 
 $(PQCLEAN_COMMON_OUTPUT): $(PQCLEAN_SRC_DIR) $(PQCLEAN_COMMON_OBJECTS)
-	$(AR) -r $@ $(PQCLEAN_COMMON_OBJECTS)
+	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_COMMON_OBJECTS)
 
 {% for make_output in make_outputs %}
-$({{ make_output.target }}): $(PQCLEAN_SRC_DIR)
-	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
+{{ make_output.target }}_OBJECTS = \
+	{% for object in make_output.objects %}
+	$(PQCLEAN_SRC_DIR)/{{ make_output.src }}/{{ object }}{% if not loop.last %} \{% endif %}
+
+	{% endfor %}
+
+$({{ make_output.target }}): $({{ make_output.target }}_OBJECTS)
+	$(ar_verbose) $(AR) -r $@ $({{ make_output.target }}_OBJECTS)
+
+# $({{ make_output.target }}): $(PQCLEAN_SRC_DIR)
+# 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
 {% endfor %}
 

@@ -31,6 +31,24 @@ if __name__ == "__main__":
         kem_meta_file = os.path.join(basepath, '..', 'c_deps', 'PQClean', kem_data['src'], '..', 'META.yml')
         with open(kem_meta_file, 'r') as f:
             kem_meta = yaml.safe_load(f)
+        kem_makefile = os.path.join(basepath, '..', 'c_deps', 'PQClean', kem_data['src'], 'Makefile')
+        headers_pattern = r'HEADERS\s*=\s*(.+)$'
+        objects_pattern = r'OBJECTS\s*=\s*(.+)$'
+        kem_headers = []
+        kem_objects = []
+        kem_sources = []
+        with open(kem_makefile, 'r') as f:
+            for line in f.readlines():
+                headers_captures = re.search(headers_pattern, line)
+                if headers_captures:
+                    kem_headers.extend(headers_captures.group(1).split())
+                objects_captures = re.search(objects_pattern, line)
+                if objects_captures:
+                    kem_objects.extend(objects_captures.group(1).split())
+        for kem_object in kem_objects:
+            kem_base_file, _ = os.path.splitext(kem_object)
+            kem_source = kem_base_file + '.c'
+            kem_sources.append(kem_source)
         kem_data['meta'] = kem_meta
         kem_h_file = os.path.join(c_src_root, 'nif', f"pqclean_nif_{kem_data['lower_c_name']}.h")
         kem_c_file = os.path.join(c_src_root, 'nif', f"pqclean_nif_{kem_data['lower_c_name']}.c")
@@ -44,6 +62,9 @@ if __name__ == "__main__":
             'target': f"{kem_data['pqclean_prefix']}_OUTPUT",
             'libname': kem_data['libname'],
             'src': kem_data['src'],
+            'headers': kem_headers,
+            'objects': kem_objects,
+            'sources': kem_sources,
         })
     for sign_data in config['sign_algorithms']:
         sign_meta_file = os.path.join(basepath, '..', 'c_deps', 'PQClean', sign_data['src'], '..', 'META.yml')
@@ -58,6 +79,24 @@ if __name__ == "__main__":
                     if captures:
                         sign_meta['length-seed'] = int(captures.group(1))
                         break
+        sign_makefile = os.path.join(basepath, '..', 'c_deps', 'PQClean', sign_data['src'], 'Makefile')
+        headers_pattern = r'HEADERS\s*=\s*(.+)$'
+        objects_pattern = r'OBJECTS\s*=\s*(.+)$'
+        sign_headers = []
+        sign_objects = []
+        sign_sources = []
+        with open(sign_makefile, 'r') as f:
+            for line in f.readlines():
+                headers_captures = re.search(headers_pattern, line)
+                if headers_captures:
+                    sign_headers.extend(headers_captures.group(1).split())
+                objects_captures = re.search(objects_pattern, line)
+                if objects_captures:
+                    sign_objects.extend(objects_captures.group(1).split())
+        for sign_object in sign_objects:
+            sign_base_file, _ = os.path.splitext(sign_object)
+            sign_source = sign_base_file + '.c'
+            sign_sources.append(sign_source)
         sign_data['meta'] = sign_meta
         sign_h_file = os.path.join(c_src_root, 'nif', f"pqclean_nif_{sign_data['lower_c_name']}.h")
         sign_c_file = os.path.join(c_src_root, 'nif', f"pqclean_nif_{sign_data['lower_c_name']}.c")
@@ -71,6 +110,9 @@ if __name__ == "__main__":
             'target': f"{sign_data['pqclean_prefix']}_OUTPUT",
             'libname': sign_data['libname'],
             'src': sign_data['src'],
+            'headers': sign_headers,
+            'objects': sign_objects,
+            'sources': sign_sources,
         })
     nif_c_file = os.path.join(c_src_root, 'nif', 'pqclean_nif.c')
     with open(nif_c_file, 'w') as f:
@@ -87,6 +129,7 @@ if __name__ == "__main__":
     make_file = os.path.join(c_src_root, 'Makefile')
     with open(make_file, 'w') as f:
         print(make_file)
+        print(make_outputs)
         f.write(makefile_template.render({'make_outputs': make_outputs}))
     readme_file = os.path.join(basepath, '..', 'README.md')
     with open(readme_file, 'w') as f:
