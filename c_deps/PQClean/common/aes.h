@@ -1,5 +1,5 @@
-#ifndef AES_H
-#define AES_H
+#ifndef _PQCLEAN_AES_H
+#define _PQCLEAN_AES_H
 
 #include <stdint.h>
 #include <stdlib.h>

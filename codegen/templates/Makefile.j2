@@ -116,12 +116,14 @@ CXXFLAGS += -fno-omit-frame-pointer \
 	-I"$(PQCLEAN_SRC_DIR)/common" \
 	-I"$(PQCLEAN_SRC_DIR)"
 
-LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" \
-	-L"$(dir $(PQCLEAN_COMMON_OUTPUT))" -lpqclean_common \
-{% for make_output in make_outputs %}
-	-L"$(dir $({{ make_output.target }}))" -l{{ make_output.libname }}{% if not loop.last %} \
-	{% endif %}
-{% endfor %}
+LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)"
+
+# LDLIBS += -L"$(ERL_INTERFACE_LIB_DIR)" \
+# 	-L"$(dir $(PQCLEAN_COMMON_OUTPUT))" -lpqclean_common \
+# {% for make_output in make_outputs %}
+# 	-L"$(dir $({{ make_output.target }}))" -l{{ make_output.libname }}{% if not loop.last %} \
+# 	{% endif %}
+# {% endfor %}
 
 
 # Dependencies.
@@ -131,16 +133,16 @@ PQCLEAN_GIT ?= https://github.com/PQClean/PQClean.git
 PQCLEAN_SRC_DIR ?= $(C_DEPS_DIR)/PQClean
 PQCLEAN_COMMON_OUTPUT ?= $(PQCLEAN_SRC_DIR)/common/libpqclean_common.a
 PQCLEAN_MAKE_FILE ?= $(PQCLEAN_SRC_DIR)/Makefile
-{% for make_output in make_outputs %}
-{{ make_output.target }} ?= $(PQCLEAN_SRC_DIR)/{{ make_output.src }}/lib{{ make_output.libname }}.a
-{% endfor %}
+# {% for make_output in make_outputs %}
+# {{ make_output.target }} ?= $(PQCLEAN_SRC_DIR)/{{ make_output.src }}/lib{{ make_output.libname }}.a
+# {% endfor %}
 
-ALL_DEPS_OUTPUT ?= \
-	$(PQCLEAN_COMMON_OUTPUT) \
-{% for make_output in make_outputs %}
-	$({{ make_output.target }}){% if not loop.last %} \
-	{% endif %}
-{% endfor %}
+# ALL_DEPS_OUTPUT ?= \
+# 	$(PQCLEAN_COMMON_OUTPUT) \
+# {% for make_output in make_outputs %}
+# 	$({{ make_output.target }}){% if not loop.last %} \
+# 	{% endif %}
+# {% endfor %}
 
 
 # Verbosity.
@@ -198,26 +200,28 @@ endif
 COMPILE_C = $(c_verbose) $(CC) $(CFLAGS) $(CPPFLAGS) -c
 COMPILE_CPP = $(cpp_verbose) $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c
 
-all:: deps app
+all:: app
+
+# all:: deps app
 
 app:: $(C_SRC_ENV) $(C_SRC_OUTPUT_FILE)
 
-ifeq ($(filter $(foreach p,$(ALL_DEPS_OUTPUT),$(if $(wildcard $(p)),,x)), x),)
+# ifeq ($(filter $(foreach p,$(ALL_DEPS_OUTPUT),$(if $(wildcard $(p)),,x)), x),)
 
-deps::
+# deps::
 
-else
+# else
 
-deps:: $(ALL_DEPS_OUTPUT)
+# deps:: $(ALL_DEPS_OUTPUT)
 
-endif
+# endif
 
 test-build:: $(C_SRC_ENV) $(C_SRC_OUTPUT_FILE)
 
 $(C_DEPS_DIR):
 	$(verbose) mkdir -p $(C_DEPS_DIR)
 
-$(PQCLEAN_SRC_DIR):
+$(PQCLEAN_SRC_DIR): $(C_DEPS_DIR)
 	$(verbose) if [ ! -f $(PQCLEAN_SRC_DIR)/requirements.txt ]; then \
 		git clone -n $(PQCLEAN_GIT) $(PQCLEAN_SRC_DIR) && \
 		(cd $(PQCLEAN_SRC_DIR) && git checkout -q $(PQCLEAN_VSN)); \
@@ -233,8 +237,8 @@ PQCLEAN_COMMON_OBJECTS = \
 	$(PQCLEAN_SRC_DIR)/common/sha2.o \
 	$(PQCLEAN_SRC_DIR)/common/sp800-185.o
 
-$(PQCLEAN_COMMON_OUTPUT): $(PQCLEAN_SRC_DIR) $(PQCLEAN_COMMON_OBJECTS)
-	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_COMMON_OBJECTS)
+# $(PQCLEAN_COMMON_OUTPUT): $(PQCLEAN_SRC_DIR) $(PQCLEAN_COMMON_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $(PQCLEAN_COMMON_OBJECTS)
 
 {% for make_output in make_outputs %}
 {{ make_output.target }}_OBJECTS = \
@@ -243,17 +247,26 @@ $(PQCLEAN_COMMON_OUTPUT): $(PQCLEAN_SRC_DIR) $(PQCLEAN_COMMON_OBJECTS)
 
 	{% endfor %}
 
-$({{ make_output.target }}): $({{ make_output.target }}_OBJECTS)
-	$(ar_verbose) $(AR) -r $@ $({{ make_output.target }}_OBJECTS)
+# $({{ make_output.target }}): $({{ make_output.target }}_OBJECTS)
+# 	$(ar_verbose) $(AR) -r $@ $({{ make_output.target }}_OBJECTS)
 
 # $({{ make_output.target }}): $(PQCLEAN_SRC_DIR)
 # 	$(MAKE) -j -C $(dir $@) EXTRAFLAGS="-fPIC"
 
 {% endfor %}
 
-$(C_SRC_OUTPUT_FILE): deps $(OBJECTS)
+DEPS_OBJECTS = \
+	$(PQCLEAN_COMMON_OBJECTS) \
+	{% for make_output in make_outputs %}
+	$({{ make_output.target }}_OBJECTS){% if not loop.last %} \{% endif %}
+
+	{% endfor %}
+
+$(DEPS_OBJECTS): $(PQCLEAN_SRC_DIR)
+
+$(C_SRC_OUTPUT_FILE): $(DEPS_OBJECTS) $(OBJECTS)
 	$(verbose) mkdir -p $(dir $@)
-	$(link_verbose) $(CC) $(OBJECTS) \
+	$(link_verbose) $(CC) $(DEPS_OBJECTS) $(OBJECTS) \
 		$(LDFLAGS) $(if $(filter $(C_SRC_TYPE),shared),-shared) $(LDLIBS) \
 		-o $(C_SRC_OUTPUT_FILE)
 
@@ -280,7 +293,7 @@ clean-deps:
 	$(gen_verbose) rm -f $(PQCLEAN_COMMON_OUTPUT)
 	$(gen_verbose) rm -f $(PQCLEAN_COMMON_OBJECTS)
 	{% for make_output in make_outputs %}
-	$(MAKE) -C $(dir $({{ make_output.target }})) clean
+	$(gen_verbose) $(MAKE) -C $(PQCLEAN_SRC_DIR)/{{ make_output.src }} clean
 	{% endfor %}
 
 distclean:: distclean-c_src-env

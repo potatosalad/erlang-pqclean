@@ -129,7 +129,6 @@ if __name__ == "__main__":
     make_file = os.path.join(c_src_root, 'Makefile')
     with open(make_file, 'w') as f:
         print(make_file)
-        print(make_outputs)
         f.write(makefile_template.render({'make_outputs': make_outputs}))
     readme_file = os.path.join(basepath, '..', 'README.md')
     with open(readme_file, 'w') as f:
